@@ -4,7 +4,7 @@ Este repositório foi criado para eu praticar o fluxo de contribuição no GitHu
 
 ## Sobre
 
-Esse é um repositótio de teste, usado apenas para aprendizado. Sinta-se livre para ignorar o conteúdo.
+Esse é um repositório de teste, usado apenas para aprendizado. Sinta-se livre para ignorar o conteúdo.
 
 ## Como usar
 
