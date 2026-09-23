@@ -981,6 +981,16 @@
   .import-box p{font-size:13px; color:var(--ink); line-height:1.55; margin:0 0 10px;}
   .import-box p.warn{font-size:12.5px; line-height:1.5; color:var(--warn-ink); background:var(--warn-bg-2); border:1px solid var(--warn-line); padding:9px 11px; border-radius:9px;}
   .import-actions{display:flex; justify-content:flex-end; gap:8px; margin-top:14px;}
+  .cripto-campo{display:flex; flex-direction:column; gap:4px; margin:0 0 10px;}
+  .cripto-campo label{font-size:11px; text-transform:uppercase; letter-spacing:.07em; color:var(--ink-muted); font-weight:700;}
+  .cripto-campo input{
+    border:1px solid var(--line-strong); border-radius:8px; padding:8px 10px; font-family:inherit; font-size:14px;
+    background:var(--surface); color:var(--ink);
+  }
+  .cripto-campo input:focus{outline:none; border-color:var(--et);}
+  .cripto-mostrar{font-size:12px; color:var(--ink-soft); display:flex; align-items:center; gap:6px; margin:0 0 6px;}
+  .cripto-erro{font-size:12.5px; color:var(--warn-ink); min-height:1.2em; margin:4px 0 0;}
+  .cripto-sem{font-size:12px; margin-right:auto; background:none; border:none; color:var(--ink-soft); text-decoration:underline; cursor:pointer; font-family:inherit; padding:0;}
   .import-progress{font-size:11.5px; color:var(--ink-faint); text-align:right; margin:8px 0 0; font-variant-numeric:tabular-nums;}
 </style>
 <script>
@@ -1048,7 +1058,7 @@
         <h3>Dados e backup</h3>
         <div class="backup-status" id="backupStatus"></div>
         <div class="backup-row">
-          <span class="backup-hint">Backup completo (todas as turmas e bimestres) — use antes de trocar de link publicado, ou de vez em quando por segurança.</span>
+          <span class="backup-hint">Backup completo (todas as turmas e bimestres), protegido por senha — use antes de trocar de link publicado, ou de vez em quando por segurança.</span>
           <div class="backup-actions">
             <button class="btn ghost small" id="exportAllBtn">⬇ Exportar backup completo</button>
             <button class="btn ghost small" id="importAllBtn">⬆ Importar backup</button>
@@ -4711,12 +4721,189 @@
     return payload;
   }
 
+  // ---------------- Backup criptografado ----------------
+  // O arquivo de backup sai deste computador (pendrive, Drive, e-mail), então
+  // ele vai criptografado: AES-256-GCM, com a chave derivada da senha por
+  // PBKDF2-SHA256 (600 mil iterações). Tudo com a criptografia do próprio
+  // navegador (crypto.subtle), sem biblioteca de fora. Sem a senha, o arquivo
+  // é ilegível — e não há como recuperá-lo. Só os dados de uso diário (o
+  // localStorage) e o arquivo da pasta sincronizada continuam sem senha.
+  const BACKUP_CRIPTO_FORMATO = "caderneta-engajamento-backup-cripto";
+  const BACKUP_CRIPTO_ITER = 600000;
+  const SENHA_MINIMA = 8;
+
+  function criptoDisponivel(){
+    return !!(window.crypto && window.crypto.subtle && window.isSecureContext);
+  }
+  function bytesParaB64(bytes){
+    let bin = "";
+    const u8 = new Uint8Array(bytes);
+    for(let i = 0; i < u8.length; i += 0x8000) bin += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000));
+    return btoa(bin);
+  }
+  function b64ParaBytes(b64){
+    const bin = atob(b64);
+    const u8 = new Uint8Array(bin.length);
+    for(let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
+    return u8;
+  }
+  async function derivarChave(senha, salt, iter){
+    const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(senha), "PBKDF2", false, ["deriveKey"]);
+    return crypto.subtle.deriveKey({name:"PBKDF2", hash:"SHA-256", salt, iterations: iter},
+      base, {name:"AES-GCM", length:256}, false, ["encrypt", "decrypt"]);
+  }
+  function ehBackupCripto(obj){
+    return !!(obj && typeof obj === "object" && obj.formato === BACKUP_CRIPTO_FORMATO);
+  }
+  async function criptografarBackup(payload, senha, dica){
+    const salt = crypto.getRandomValues(new Uint8Array(16));
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const chave = await derivarChave(senha, salt, BACKUP_CRIPTO_ITER);
+    const cifrado = await crypto.subtle.encrypt({name:"AES-GCM", iv}, chave, new TextEncoder().encode(JSON.stringify(payload)));
+    // Fora da criptografia fica só o necessário para abrir o arquivo e a
+    // dica escolhida pelo professor. Nenhum nome de aluno, nem a contagem.
+    return {
+      formato: BACKUP_CRIPTO_FORMATO, versao: 1,
+      aviso: "Backup da Caderneta de Engajamento protegido por senha. Para abrir: Dados e backup > Importar backup.",
+      exportedAt: payload.exportedAt,
+      dica: dica || "",
+      kdf: {nome:"PBKDF2-SHA256", iteracoes: BACKUP_CRIPTO_ITER, salt: bytesParaB64(salt)},
+      cifra: {nome:"AES-256-GCM", iv: bytesParaB64(iv)},
+      dados: bytesParaB64(cifrado)
+    };
+  }
+  // Devolve o payload aberto, ou lança erro com .senhaErrada = true.
+  async function descriptografarBackup(env, senha){
+    try{
+      const salt = b64ParaBytes(env.kdf.salt), iv = b64ParaBytes(env.cifra.iv);
+      const chave = await derivarChave(senha, salt, Number(env.kdf.iteracoes) || BACKUP_CRIPTO_ITER);
+      const claro = await crypto.subtle.decrypt({name:"AES-GCM", iv}, chave, b64ParaBytes(env.dados));
+      return JSON.parse(new TextDecoder().decode(claro));
+    }catch(e){
+      const erro = new Error("Não foi possível abrir o backup.");
+      // O AES-GCM recusa (OperationError) quando a senha não é a mesma.
+      erro.senhaErrada = e && e.name === "OperationError";
+      throw erro;
+    }
+  }
+
+  // Janela de senha, usada para exportar (criar senha) e importar (abrir).
+  // opts: {modo:"criar"|"abrir", dica, aoConfirmar(senha, dica, setErro, fechar), aoSemSenha}
+  function janelaSenha(opts){
+    const criar = opts.modo === "criar";
+    const overlay = document.createElement("div");
+    overlay.className = "import-overlay";
+    overlay.innerHTML = `
+      <div class="import-box" role="dialog" aria-label="${criar ? "Senha do backup" : "Abrir backup protegido"}">
+        <h3>${criar ? "Proteger o backup com senha" : "Backup protegido por senha"}</h3>
+        ${criar
+          ? `<p>O arquivo sai criptografado: sem a senha, ninguém consegue ler os dados dos alunos — nem quem achar o arquivo num pendrive ou no Drive.</p>
+             <p class="warn"><b>Guarde esta senha.</b> Se ela for esquecida, o backup não abre mais, e não existe forma de recuperá-lo.</p>`
+          : `<p>Digite a senha usada ao exportar este backup.</p>` +
+            (opts.dica ? `<p><b>Dica:</b> ${escapeHtml(opts.dica)}</p>` : "")}
+        <div class="cripto-campo">
+          <label for="criptoSenha">Senha${criar ? ` (mínimo ${SENHA_MINIMA} caracteres)` : ""}</label>
+          <input type="password" id="criptoSenha" autocomplete="${criar ? "new-password" : "current-password"}">
+        </div>
+        ${criar ? `
+        <div class="cripto-campo">
+          <label for="criptoSenha2">Repita a senha</label>
+          <input type="password" id="criptoSenha2" autocomplete="new-password">
+        </div>
+        <div class="cripto-campo">
+          <label for="criptoDica">Dica para lembrar (opcional — fica visível no arquivo)</label>
+          <input type="text" id="criptoDica" maxlength="80" value="${escapeHtml(opts.dica || "")}" placeholder="ex.: a mesma do portal da escola">
+        </div>` : ""}
+        <label class="cripto-mostrar"><input type="checkbox" id="criptoMostrar"> mostrar senha</label>
+        <p class="cripto-erro" id="criptoErro" role="alert"></p>
+        <div class="import-actions">
+          ${criar ? `<button class="cripto-sem" id="criptoSem" type="button">exportar sem senha</button>` : ""}
+          <button class="btn ghost" id="criptoCancelar" type="button">Cancelar</button>
+          <button class="btn primary" id="criptoOk" type="button">${criar ? "Exportar backup" : "Abrir backup"}</button>
+        </div>
+      </div>`;
+    document.body.appendChild(overlay);
+    const $ = sel=> overlay.querySelector(sel);
+    const senha = $("#criptoSenha"), senha2 = $("#criptoSenha2"), dica = $("#criptoDica");
+    const erro = $("#criptoErro"), ok = $("#criptoOk");
+    const setErro = (t)=>{ erro.textContent = t || ""; };
+    const fechar = ()=> overlay.remove();
+    $("#criptoMostrar").onchange = (e)=>{
+      const tipo = e.target.checked ? "text" : "password";
+      senha.type = tipo; if(senha2) senha2.type = tipo;
+    };
+    $("#criptoCancelar").onclick = fechar;
+    if(criar){
+      $("#criptoSem").onclick = ()=>{
+        // Continua possível (é o formato antigo), mas nunca por engano.
+        if($("#criptoSem").dataset.armado !== "1"){
+          $("#criptoSem").dataset.armado = "1";
+          $("#criptoSem").textContent = "clique de novo: o arquivo sai legível para qualquer um";
+          return;
+        }
+        fechar();
+        opts.aoSemSenha();
+      };
+    }
+    const confirmar = async ()=>{
+      const s1 = senha.value;
+      if(criar){
+        if(s1.length < SENHA_MINIMA){ setErro(`A senha precisa de pelo menos ${SENHA_MINIMA} caracteres.`); senha.focus(); return; }
+        if(s1 !== senha2.value){ setErro("As duas senhas não são iguais."); senha2.focus(); return; }
+        const d = dica.value.trim();
+        if(d && d.toLowerCase().includes(s1.toLowerCase())){ setErro("A dica não pode conter a própria senha."); dica.focus(); return; }
+      }else if(!s1){ setErro("Digite a senha."); senha.focus(); return; }
+      setErro("");
+      ok.disabled = true;
+      ok.textContent = criar ? "Criptografando…" : "Abrindo…";
+      try{
+        await opts.aoConfirmar(s1, criar ? dica.value.trim() : "", setErro, fechar);
+      }finally{
+        if(overlay.isConnected){ ok.disabled = false; ok.textContent = criar ? "Exportar backup" : "Abrir backup"; }
+      }
+    };
+    ok.onclick = confirmar;
+    overlay.querySelectorAll("input[type=password], input[type=text]").forEach(inp=>{
+      inp.onkeydown = (e)=>{ if(e.key === "Enter"){ e.preventDefault(); confirmar(); } };
+    });
+    senha.focus();
+  }
+
+  const DICA_KEY = "backup:dica";
+  function exportAllData(){
+    if(!criptoDisponivel()){
+      showToast("Este navegador não oferece criptografia aqui — o backup vai sair sem senha.");
+      exportarBackup(null, "");
+      return;
+    }
+    let dicaSalva = "";
+    try{ dicaSalva = localStorage.getItem(STORAGE_PREFIX + DICA_KEY) || ""; }catch(e){}
+    janelaSenha({
+      modo: "criar",
+      dica: dicaSalva,
+      aoSemSenha: ()=> exportarBackup(null, ""),
+      aoConfirmar: async (senha, dica, setErro, fechar)=>{
+        try{ localStorage.setItem(STORAGE_PREFIX + DICA_KEY, dica); }catch(e){}
+        fechar();
+        await exportarBackup(senha, dica);
+      }
+    });
+  }
+
   // O backup só conta como feito quando se sabe que o arquivo foi gravado.
-  // Com a janela "Salvar como" do navegador (Chrome/Edge em http/https), isso
-  // é certo. No download comum (ex.: arquivo aberto direto, file://) o
-  // navegador não conta se o usuário cancelou — então a caderneta pergunta.
-  async function exportAllData(){
-    const nome = `backup-caderneta-engajamento_${todayStr()}.json`;
+  // Com a janela "Salvar como" do navegador (Chrome/Edge), isso é certo. No
+  // download comum o navegador não conta se o usuário cancelou — então a
+  // caderneta pergunta.
+  async function exportarBackup(senha, dica){
+    const nome = `backup-caderneta-engajamento_${todayStr()}${senha ? "_protegido" : ""}.json`;
+    const montar = async ()=>{
+      const payload = await buildFullBackupPayload();
+      const conteudo = senha ? await criptografarBackup(payload, senha, dica) : payload;
+      return JSON.stringify(conteudo, null, 2);
+    };
+    const ok = senha
+      ? "Backup protegido por senha salvo. Guarde a senha: sem ela o arquivo não abre."
+      : "Backup completo salvo (sem senha). Guarde esse arquivo em local seguro.";
     if(window.showSaveFilePicker && window.isSecureContext){
       let handle = null;
       try{
@@ -4731,12 +4918,12 @@
       }
       if(handle){
         try{
-          const json = JSON.stringify(await buildFullBackupPayload(), null, 2);
+          const json = await montar();
           const w = await handle.createWritable();
           await w.write(json);
           await w.close();
           marcarBackupFeito();
-          showToast("Backup completo salvo. Guarde esse arquivo em local seguro.");
+          showToast(ok);
         }catch(e){
           console.error("Erro ao gravar backup:", e);
           showToast("Não consegui gravar o arquivo de backup. Tente de novo em outra pasta.");
@@ -4746,8 +4933,7 @@
     }
 
     showToast("Preparando backup de todas as turmas…");
-    const payload = await buildFullBackupPayload();
-    const json = JSON.stringify(payload, null, 2);
+    const json = await montar();
     const blob = new Blob([json], {type:"application/json;charset=utf-8;"});
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -4799,6 +4985,10 @@
       let payload;
       try{ payload = JSON.parse(reader.result); }
       catch(err){ showToast("Esse arquivo não é um JSON válido."); return; }
+      if(ehBackupCripto(payload)){
+        abrirBackupProtegido(payload);
+        return;
+      }
       if(!payload || typeof payload !== "object" || !payload.rosters || !payload.bimdata){
         showToast("Esse arquivo não parece ser um backup desta caderneta.");
         return;
@@ -4807,6 +4997,31 @@
     };
     reader.onerror = ()=> showToast("Não consegui ler esse arquivo.");
     reader.readAsText(file);
+  }
+
+  function abrirBackupProtegido(env){
+    if(!criptoDisponivel()){
+      showToast("Este backup é protegido por senha, e este navegador não oferece criptografia aqui. Abra a caderneta no Chrome ou no Edge.");
+      return;
+    }
+    janelaSenha({
+      modo: "abrir",
+      dica: typeof env.dica === "string" ? env.dica : "",
+      aoConfirmar: async (senha, _d, setErro, fechar)=>{
+        let payload;
+        try{ payload = await descriptografarBackup(env, senha); }
+        catch(e){
+          setErro(e.senhaErrada ? "Senha incorreta. Confira maiúsculas e minúsculas." : "O arquivo está corrompido e não pôde ser aberto.");
+          return;
+        }
+        if(!payload || typeof payload !== "object" || !payload.rosters || !payload.bimdata){
+          setErro("O conteúdo aberto não é um backup desta caderneta.");
+          return;
+        }
+        fechar();
+        showImportConfirm(payload);
+      }
+    });
   }
 
   function showImportConfirm(payload, opts){
@@ -5125,8 +5340,22 @@
     finally{ syncGravando = false; }
   }
 
+  // O arquivo escolhido para sincronizar é um backup protegido por senha?
+  // Gravar por cima dele apagaria o backup — então a caderneta se recusa.
+  async function syncArquivoEhBackupCripto(){
+    try{
+      const text = await (await syncFileHandle.getFile()).text();
+      return text.trim() ? ehBackupCripto(JSON.parse(text)) : false;
+    }catch(e){ return false; }
+  }
+
   async function gravarSyncFileAgora(opts){
     const forcar = !!(opts && opts.force);
+    if(await syncArquivoEhBackupCripto()){
+      await unlinkSync();
+      showToast("O arquivo escolhido para sincronizar é um backup protegido por senha — não gravei por cima dele. Vincule um arquivo novo.");
+      return;
+    }
     if(!await syncPermissionOk()) return;
 
     // Trava contra sobrescrever trabalho feito em outro computador: relê o
