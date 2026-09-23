@@ -1,0 +1,1412 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found]){display:none!important}</style></head><body>
+<title>Carta de Esforço</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   PALETA — papel de ergometria (claro) / mostrador retroiluminado (escuro)
+   Todo componente lê só destes tokens.
+   ============================================================ */
+:root{
+  --paper:#FBF4F1;
+  --panel:rgba(255,255,255,.55);
+  --grid-fine:#F2DCD5;
+  --grid-bold:#E5BAAE;
+  --ink:#241A1B;
+  --ink-soft:#7A6A6C;
+  --ink-faint:#A99A9B;
+  --rule:#E0CCC6;
+  --trace:#B31E27;
+  --pencil:#1F4E79;
+  --relief-fill:#DEE2E9;
+  --relief-line:#6C7586;
+  --gain:#1B6A49;
+  --warn:#94620A;
+  --z1:#F6E7E3; --z2:#F1DAD5; --z3:#EBCBC4; --z4:#E3B8B0; --z5:#D9A199;
+  --grid-op:.55;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#141014;
+    --panel:rgba(255,255,255,.035);
+    --grid-fine:#211A1E;
+    --grid-bold:#2E2328;
+    --ink:#F0E7E4;
+    --ink-soft:#A2908D;
+    --ink-faint:#776764;
+    --rule:#2E2528;
+    --trace:#F2585F;
+    --pencil:#7FB3E8;
+    --relief-fill:#212832;
+    --relief-line:#8A96A8;
+    --gain:#4FC48D;
+    --warn:#D9A33A;
+    --z1:#1B171A; --z2:#231A1D; --z3:#2C1C20; --z4:#371E23; --z5:#452026;
+    --grid-op:.7;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#141014;
+  --panel:rgba(255,255,255,.035);
+  --grid-fine:#211A1E;
+  --grid-bold:#2E2328;
+  --ink:#F0E7E4;
+  --ink-soft:#A2908D;
+  --ink-faint:#776764;
+  --rule:#2E2528;
+  --trace:#F2585F;
+  --pencil:#7FB3E8;
+  --relief-fill:#212832;
+  --relief-line:#8A96A8;
+  --gain:#4FC48D;
+  --warn:#D9A33A;
+  --z1:#1B171A; --z2:#231A1D; --z3:#2C1C20; --z4:#371E23; --z5:#452026;
+  --grid-op:.7;
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Public Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;
+}
+.sheet{max-width:1000px;margin:0 auto;padding:30px 22px 70px;position:relative}
+.sheet::before{
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    linear-gradient(var(--grid-fine) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid-fine) 1px,transparent 1px),
+    linear-gradient(var(--grid-bold) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid-bold) 1px,transparent 1px);
+  background-size:8px 8px,8px 8px,40px 40px,40px 40px;
+  opacity:var(--grid-op);
+  -webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 93%,transparent 100%);
+  mask-image:linear-gradient(to bottom,#000 0%,#000 93%,transparent 100%);
+}
+.sheet>*{position:relative;z-index:1}
+
+.mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+.num{font-variant-numeric:tabular-nums}
+
+/* ---------- cabeçalho ---------- */
+header{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;
+  border-bottom:1.5px solid var(--ink);padding-bottom:13px;margin-bottom:8px}
+.brand{display:flex;align-items:flex-end;gap:14px;min-width:0}
+.calib{flex:none;margin-bottom:5px}
+h1{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:17px;
+  letter-spacing:.18em;text-transform:uppercase;margin:0;line-height:1.2}
+.sub{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-soft);
+  letter-spacing:.06em;margin-top:4px}
+.head-actions{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.status{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-soft);
+  letter-spacing:.04em;display:flex;align-items:center;gap:8px}
+.bar{display:inline-block;width:96px;height:3px;background:var(--rule);position:relative;overflow:hidden}
+.bar i{position:absolute;inset:0 auto 0 0;background:var(--trace);width:0;transition:width .45s ease}
+button.refresh{
+  font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  background:var(--ink);color:var(--paper);border:1px solid var(--ink);padding:8px 15px;
+  cursor:pointer;border-radius:2px;transition:background .15s,color .15s}
+button.refresh:hover:not(:disabled){background:var(--trace);border-color:var(--trace);color:#fff}
+button.refresh:disabled{opacity:.4;cursor:default}
+button.refresh:focus-visible{outline:2px solid var(--pencil);outline-offset:2px}
+
+/* ---------- avisos ---------- */
+.notice{border:1px solid var(--rule);border-left:3px solid var(--trace);background:var(--panel);
+  padding:14px 16px;margin:18px 0;font-size:14px;max-width:70ch}
+.notice.warn{border-left-color:var(--warn)}
+.notice b{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--trace);display:block;margin-bottom:6px}
+.notice.warn b{color:var(--warn)}
+.notice p{margin:0}
+.notice p+p{margin-top:7px}
+
+/* ---------- seções ---------- */
+section{margin-top:38px}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink-soft);border-bottom:1px solid var(--rule);padding-bottom:6px;margin-bottom:18px;
+  display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.eyebrow span{color:var(--ink-faint);letter-spacing:.05em;text-transform:none;font-size:10.5px;font-weight:400}
+
+/* ---------- veredito ---------- */
+.verdict{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:34px;align-items:center}
+.verdict-word{font-family:"Instrument Serif",Georgia,serif;font-size:clamp(44px,8.5vw,78px);
+  line-height:.94;margin:0 0 12px;letter-spacing:-.015em;text-wrap:balance}
+.verdict-word.up{color:var(--gain)}
+.verdict-word.down{color:var(--trace)}
+.verdict-word.flat,.verdict-word.indef{color:var(--ink)}
+.verdict-word.indef{color:var(--ink-faint)}
+.verdict-lead{font-size:15.5px;max-width:48ch}
+.verdict-lead b{font-family:"IBM Plex Mono",monospace;font-weight:600;font-variant-numeric:tabular-nums}
+.verdict-note{font-family:"Instrument Serif",Georgia,serif;font-style:italic;color:var(--pencil);
+  font-size:16.5px;line-height:1.45;border-left:2px solid var(--pencil);padding-left:14px;margin-top:16px;max-width:52ch}
+
+.signals{display:flex;flex-direction:column}
+.signal{display:grid;grid-template-columns:1fr auto auto;gap:14px;align-items:center;
+  padding:12px 0;border-bottom:1px solid var(--rule)}
+.signal:first-child{border-top:1px solid var(--rule)}
+.signal-name{font-size:13.5px;line-height:1.3}
+.signal-name em{display:block;font-style:normal;font-family:"IBM Plex Mono",monospace;
+  font-size:9.5px;color:var(--ink-faint);letter-spacing:.07em;margin-top:3px;text-transform:uppercase}
+.signal-val{font-family:"IBM Plex Mono",monospace;font-size:16px;font-weight:500;text-align:right;
+  white-space:nowrap;font-variant-numeric:tabular-nums}
+.signal-val span{font-size:10.5px;display:block;font-weight:400;margin-top:2px;letter-spacing:.02em}
+.up{color:var(--gain)}.down{color:var(--trace)}.flat{color:var(--ink-soft)}
+
+/* ---------- teto aeróbico ---------- */
+.teto{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:30px;align-items:start}
+.teto-word{font-family:"Instrument Serif",Georgia,serif;font-size:clamp(29px,4.4vw,38px);
+  line-height:1.06;margin:0 0 12px;text-wrap:balance}
+.teto-lead{font-size:14.5px;max-width:46ch}
+.teto-lead b{font-family:"IBM Plex Mono",monospace;font-weight:600;font-variant-numeric:tabular-nums}
+.teto-lead p{margin:0 0 10px}
+.teto-lead p:last-child{margin-bottom:0}
+.teto .cards{margin-top:0;grid-template-columns:repeat(auto-fit,minmax(134px,1fr))}
+.teto .cards .v small{display:block;margin:4px 0 0}
+.zsrc{font-family:"IBM Plex Mono",monospace;font-size:9.5px;color:var(--ink-faint);
+  letter-spacing:.04em;margin-top:8px;line-height:1.6;max-width:88ch}
+
+/* ---------- pedal ---------- */
+.ride-title{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+.ride-title h2{font-family:"Instrument Serif",Georgia,serif;font-size:28px;margin:0;font-weight:400;text-wrap:balance}
+.ride-title .when{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-soft);letter-spacing:.05em}
+.trace-wrap{border:1px solid var(--rule);background:var(--panel);padding:10px 8px 5px}
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-family:"IBM Plex Mono",monospace;font-size:10px;
+  color:var(--ink-soft);letter-spacing:.05em;margin-top:9px}
+.legend i{display:inline-block;width:15px;height:2px;vertical-align:middle;margin-right:6px}
+
+/* zonas */
+.zones{margin-top:20px}
+.zbar{display:flex;height:26px;border:1px solid var(--rule);overflow:hidden}
+.zbar div{position:relative;min-width:0;transition:flex-grow .4s ease}
+.zbar b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:"IBM Plex Mono",monospace;font-size:9.5px;font-weight:500;color:var(--ink);letter-spacing:.04em}
+.zkeys{display:flex;flex-wrap:wrap;gap:0 18px;margin-top:7px;
+  font-family:"IBM Plex Mono",monospace;font-size:9.5px;color:var(--ink-faint);letter-spacing:.05em}
+
+/* cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(116px,1fr));gap:1px;
+  background:var(--rule);border:1px solid var(--rule);margin-top:20px}
+.card{background:var(--paper);padding:12px 13px 13px}
+.card .k{font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px}
+.card .v{font-family:"IBM Plex Mono",monospace;font-size:22px;font-weight:500;line-height:1;
+  letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.card .v small{font-size:11px;font-weight:400;color:var(--ink-soft);letter-spacing:0;margin-left:3px}
+.card .d{font-size:10.5px;margin-top:6px;font-family:"IBM Plex Mono",monospace;letter-spacing:.02em}
+
+/* ---------- tabelas ---------- */
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:460px}
+th{font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--ink-soft);text-align:right;padding:0 0 9px;font-weight:500;white-space:nowrap}
+th:first-child{text-align:left}
+td{padding:9px 0;border-top:1px solid var(--rule);text-align:right;
+  font-family:"IBM Plex Mono",monospace;font-size:13.5px;font-variant-numeric:tabular-nums;white-space:nowrap}
+td:first-child{text-align:left;font-family:"Public Sans",sans-serif;font-size:13.5px}
+td.empty{border:none;color:var(--ink-faint);font-family:"Public Sans",sans-serif;text-align:left;white-space:normal}
+.splits td:first-child{font-family:"IBM Plex Mono",monospace}
+.wbar{display:inline-block;height:7px;background:var(--relief-line);opacity:.55;vertical-align:middle;margin-right:7px}
+
+/* ---------- carga ---------- */
+.load{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:28px;align-items:start}
+.form-read{border:1px solid var(--rule);padding:16px 17px;background:var(--panel)}
+.form-read .big{font-family:"Instrument Serif",Georgia,serif;font-size:25px;line-height:1.12;margin-bottom:9px;text-wrap:balance}
+.form-read p{margin:0;font-size:13.5px}
+
+/* ---------- parecer ---------- */
+.coach{border-top:1.5px solid var(--ink);padding-top:20px;margin-top:44px}
+.coach-body{font-size:15.5px;max-width:64ch}
+.coach-body p{margin:0 0 13px}
+.coach-body b{font-family:"IBM Plex Mono",monospace;font-weight:600;font-variant-numeric:tabular-nums}
+.actions{margin:18px 0 0;padding:0;list-style:none;max-width:70ch}
+.actions li{display:flex;gap:12px;padding:11px 0;border-top:1px solid var(--rule);font-size:14px}
+.actions li::before{content:"→";color:var(--trace);font-family:"IBM Plex Mono",monospace;flex:none}
+
+footer{margin-top:50px;padding-top:15px;border-top:1px solid var(--rule);
+  font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--ink-faint);line-height:1.75;max-width:82ch}
+
+.skel{color:var(--ink-faint)}
+@media (max-width:800px){
+  .verdict{grid-template-columns:1fr;gap:24px}
+  .load{grid-template-columns:1fr;gap:22px}
+  .sheet{padding:22px 15px 54px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="sheet">
+  <header>
+    <div class="brand">
+      <svg class="calib" width="30" height="34" viewBox="0 0 30 34" aria-hidden="true">
+        <path d="M0 30 H7 V5 H15 V30 H30" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--trace)"/>
+      </svg>
+      <div>
+        <h1>Carta de esforço</h1>
+        <div class="sub" id="athlete">lendo o perfil…</div>
+      </div>
+    </div>
+    <div class="head-actions">
+      <div class="status"><span id="statusTxt">iniciando</span><span class="bar"><i id="progbar"></i></span></div>
+      <button class="refresh" id="btnRefresh" disabled>Atualizar</button>
+    </div>
+  </header>
+
+  <div id="notices"></div>
+
+  <section id="sec-verdict">
+    <div class="eyebrow">Leitura geral <span id="windowLabel"></span></div>
+    <div class="verdict">
+      <div>
+        <div class="verdict-word indef" id="verdictWord">medindo…</div>
+        <div class="verdict-lead" id="verdictLead">Lendo suas pedaladas no Strava para comparar esforço, ritmo e resposta cardíaca ao longo das últimas semanas.</div>
+        <div class="verdict-note" id="verdictNote" hidden></div>
+      </div>
+      <div class="signals" id="signals"></div>
+    </div>
+  </section>
+
+  <section id="sec-teto">
+    <div class="eyebrow">Teto aeróbico <span id="tetoMeta"></span></div>
+    <div class="teto">
+      <div>
+        <div class="teto-word" id="tetoWord">—</div>
+        <div class="teto-lead" id="tetoLead"></div>
+      </div>
+      <div class="cards" id="tetoCards"></div>
+    </div>
+  </section>
+
+  <section id="sec-ride">
+    <div class="eyebrow">Último pedal <span id="rideMeta"></span></div>
+    <div class="ride-title">
+      <h2 id="rideName">—</h2>
+      <div class="when" id="rideWhen"></div>
+    </div>
+    <div class="trace-wrap">
+      <svg id="traceSvg" viewBox="0 0 900 340" preserveAspectRatio="xMidYMid meet" role="img"
+           aria-label="Traçado do último pedal: frequência cardíaca, cadência e altimetria ao longo da distância"
+           style="width:100%;height:auto;display:block"></svg>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--trace)"></i>frequência cardíaca</span>
+      <span><i style="background:var(--pencil)"></i>cadência</span>
+      <span><i style="background:var(--relief-line)"></i>altimetria</span>
+    </div>
+
+    <div class="zones" id="zones" hidden>
+      <div class="zbar" id="zbar"></div>
+      <div class="zkeys" id="zkeys"></div>
+      <div class="zsrc" id="zoneSrc"></div>
+    </div>
+
+    <div class="cards" id="rideCards"></div>
+    <div id="rideFlags"></div>
+  </section>
+
+  <section id="sec-splits" hidden>
+    <div class="eyebrow">Parciais <span id="splitsMeta"></span></div>
+    <div class="scroll"><table class="splits" id="splitsTable"></table></div>
+  </section>
+
+  <section id="sec-cmp">
+    <div class="eyebrow">Contra pedais parecidos <span id="cmpMeta"></span></div>
+    <div class="scroll"><table id="cmpTable"></table></div>
+  </section>
+
+  <section id="sec-load">
+    <div class="eyebrow">Condicionamento, fadiga e forma <span id="loadMeta">média exponencial de 42 e 7 dias</span></div>
+    <div class="load">
+      <div><svg id="loadSvg" viewBox="0 0 900 250" preserveAspectRatio="xMidYMid meet" role="img"
+                aria-label="Curva de condicionamento, fadiga e forma ao longo do tempo"
+                style="width:100%;height:auto;display:block"></svg></div>
+      <div class="form-read" id="formRead"><div class="big skel">—</div><p></p></div>
+    </div>
+  </section>
+
+  <section class="coach" id="sec-coach">
+    <div class="eyebrow">Parecer <span id="coachMeta">a partir dos números acima</span></div>
+    <div class="coach-body" id="coachBody"><p class="skel">Aguardando os dados.</p></div>
+    <ul class="actions" id="coachActions"></ul>
+  </section>
+
+  <footer id="foot"></footer>
+</div>
+
+<script>
+"use strict";
+/* ============================================================================
+   CARTA DE ESFORÇO
+   Lê o Strava pelo conector do próprio leitor (capacidade `mcp`) e calcula
+   tudo aqui no navegador — nenhum número desta página vem de estimativa de
+   texto: ou veio do Strava, ou é aritmética sobre o que veio.
+   ============================================================================ */
+
+const SERVER   = "Strava";
+const N_LISTA  = 24;   // atividades pedidas ao índice
+const N_DET    = 8;    // quantas ganham leitura de FC/potência
+const RES      = 200;  // resolução do traçado
+const MIN15    = 15*60*1000;
+const HORA12   = 12*60*60*1000;
+
+/* ============================================================================
+   TESTE ERGOMÉTRICO — o único dado desta carta que não vem do Strava.
+   É digitado de um laudo em papel e só muda quando houver exame novo.
+   Ele dá à carta a âncora absoluta que o Strava não tem: o Strava mede
+   variação, isto mede nível.
+   ============================================================================ */
+const ERGO = {
+  /* com hora: uma data pura ("2026-08-01") seria lida como meia-noite UTC e,
+     no fuso do Brasil, exibida como 31 de julho */
+  data:"2026-08-01T09:10:00",
+  protocolo:"esteira, protocolo Ellestad",
+  peso:100,               // kg no dia do exame
+  vo2max:41.76,           // ml/kg/min — estimado pelo estágio atingido, não medido por gases
+  met:11.93, metPrevisto:12.19,
+  fcMax:177, fcMaxPrevista:176,
+  fcPico1min:131,         // FC um minuto depois do pico
+  aptidao:"Boa (AHA)"
+};
+
+/* ---------- estado ---------- */
+const S = { perfil:null, zonas:null, rides:[], det:{}, stream:null, calc:null, mcp:null, geracao:0, stamp:null };
+
+/* ---------- helpers ---------- */
+const $ = id => document.getElementById(id);
+const dec = (v,d=1) => v==null||!isFinite(v) ? "—" : Number(v).toFixed(d).replace(".",",");
+const int = v => v==null||!isFinite(v) ? "—" : Math.round(v).toLocaleString("pt-BR");
+const km  = m => dec(m/1000,1);
+const dur = s => { const h=Math.floor(s/3600), m=Math.round((s%3600)/60); return h ? h+"h"+String(m).padStart(2,"0") : m+" min"; };
+const MES = ["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"];
+const fmtData  = iso => { const d=new Date(iso); return d.getDate()+" "+MES[d.getMonth()]+" "+d.getFullYear(); };
+const fmtCurta = ms  => { const d=new Date(ms); return d.getDate()+"/"+(d.getMonth()+1); };
+const soma = a => a.reduce((x,y)=>x+y,0);
+const media = (arr,f) => { const v=arr.map(f).filter(x=>x!=null&&isFinite(x)); return v.length?soma(v)/v.length:null; };
+
+function setStatus(txt,pct){ $("statusTxt").textContent = txt; $("progbar").style.width = (pct||0)+"%"; }
+
+function aviso(titulo, corpo, tipo){
+  const d = document.createElement("div");
+  d.className = "notice" + (tipo==="warn" ? " warn" : "");
+  d.innerHTML = "<b></b><p></p>";
+  d.querySelector("b").textContent = titulo;
+  d.querySelector("p").textContent = corpo;
+  $("notices").appendChild(d);
+  return d;
+}
+function limparAvisos(){ $("notices").innerHTML = ""; }
+
+/* Regressão linear simples. x em dias (negativo = passado), y na unidade da métrica. */
+function regressao(pts){
+  const n = pts.length;
+  if(n < 3) return null;
+  let sx=0,sy=0,sxy=0,sxx=0,syy=0;
+  for(const p of pts){ sx+=p.x; sy+=p.y; sxy+=p.x*p.y; sxx+=p.x*p.x; syy+=p.y*p.y; }
+  const den = n*sxx - sx*sx;
+  if(Math.abs(den) < 1e-9) return null;
+  const slope = (n*sxy - sx*sy)/den;
+  const mediaY = sy/n;
+  const denR = Math.sqrt((n*sxx-sx*sx)*(n*syy-sy*sy));
+  const r = denR ? (n*sxy-sx*sy)/denR : 0;
+  return { slope, intercept:(sy-slope*sx)/n, media:mediaY, r2:r*r, n,
+           pctMes: mediaY ? (slope*30/mediaY)*100 : 0 };
+}
+
+/* ============================================================================
+   PALETA — lida dos tokens CSS para o desenho acompanhar o tema do leitor
+   ============================================================================ */
+let PAL = {};
+function lerPaleta(){
+  const cs = getComputedStyle(document.documentElement);
+  const g = n => cs.getPropertyValue("--"+n).trim() || "#000";
+  PAL = { ink:g("ink"), soft:g("ink-soft"), faint:g("ink-faint"), rule:g("rule"),
+          trace:g("trace"), pencil:g("pencil"), gain:g("gain"),
+          reliefFill:g("relief-fill"), reliefLine:g("relief-line"),
+          z:[g("z1"),g("z2"),g("z3"),g("z4"),g("z5")] };
+}
+lerPaleta();
+(function(){
+  const redesenhar = () => { lerPaleta(); if(S.calc) render(); };
+  if(window.matchMedia){
+    const mq = window.matchMedia("(prefers-color-scheme:dark)");
+    mq.addEventListener ? mq.addEventListener("change",redesenhar) : mq.addListener(redesenhar);
+  }
+  new MutationObserver(redesenhar).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+})();
+
+/* ============================================================================
+   ERROS DO CONECTOR — cada código tem uma saída diferente, então cada um
+   ganha o texto que diz o que fazer.
+   ============================================================================ */
+function textoErro(err){
+  const c = (err && err.code) || "upstream_error";
+  switch(c){
+    case "needs_reauth": return ["Reconecte o Strava",
+      "A autorização do Strava expirou. Abra Configurações → Conectores no claude.ai, reconecte o Strava e toque em Atualizar."];
+    case "server_not_connected": return ["Strava não está conectado",
+      "Esta conta não tem o conector do Strava disponível. Adicione-o em Configurações → Conectores no claude.ai e recarregue a página."];
+    case "selection_required": return ["Escolha qual conta do Strava usar",
+      "Há mais de um Strava conectado nesta conta. Escolha um na janela que o claude.ai mostra e toque em Atualizar."];
+    case "blocked_by_policy": return ["Acesso ao Strava bloqueado",
+      "A política da sua organização impede esta página de chamar o Strava."];
+    case "approval_required": return ["Esta chamada precisa de aprovação",
+      "A política da sua organização exige aprovar cada chamada ao Strava, e artefatos ainda não suportam esse fluxo."];
+    case "not_in_manifest": return ["Ferramenta fora do escopo autorizado",
+      "Esta página pediu algo que você não autorizou. Recarregue e aceite as permissões para ver os dados completos."];
+    case "server_unavailable": return ["O Strava não respondeu",
+      "O serviço está fora do ar ou demorou demais. Toque em Atualizar em alguns instantes."];
+    case "rate_limited": return ["Muitas chamadas seguidas",
+      "O limite de chamadas ao Strava foi atingido. Espere alguns segundos e toque em Atualizar."];
+    case "tool_error": return ["O Strava recusou o pedido",
+      (err && err.message) || "A ferramenta respondeu com erro."];
+    case "cancelled": return ["Leitura interrompida",
+      "A chamada foi cancelada antes de terminar. Toque em Atualizar."];
+    case "not_granted": case "capability_disabled": case "capability_removed":
+      return ["Sem acesso a conectores aqui",
+      "Esta visualização não pode chamar conectores. Abra a carta pelo claude.ai, com o Strava conectado."];
+    default: return ["Não consegui ler o Strava",
+      (err && err.message) || "Erro inesperado. Toque em Atualizar para tentar de novo."];
+  }
+}
+const ehAutz = c => ["needs_reauth","server_not_connected","blocked_by_policy","approval_required","not_in_manifest","not_granted","capability_disabled","capability_removed"].includes(c);
+
+/* ============================================================================
+   LEITURA
+   ============================================================================ */
+const P = (o) => (o && typeof o === "object") ? o : null;
+
+/* `marcar` guarda a hora da leitura — só o índice de atividades vale como
+   medida de frescor: perfil e zonas ficam 12 h em cache de propósito. */
+async function ler(tool, input, staleTime, marcar){
+  const r = await S.mcp.callTool(SERVER, tool, input, { cache:{ staleTime, gcTime:24*60*60*1000 } });
+  if(marcar) S.stamp = (r && r.cache && r.cache.storedAt) ? r.cache.storedAt : Date.now();
+  return r.payload;
+}
+
+async function iniciar(){
+  const mcp = await window.claude?.use?.("mcp");
+  if(!mcp){
+    setStatus("sem conector", 0);
+    aviso("Sem acesso ao Strava nesta visualização",
+      "Esta carta lê o seu Strava pelo conector do claude.ai e não guarda nenhum dado. Abra-a pelo claude.ai, com o Strava conectado, para ver os números.");
+    return;
+  }
+  S.mcp = mcp;
+  $("btnRefresh").disabled = false;
+  return carregar(false);
+}
+
+async function carregar(forcar){
+  const g = ++S.geracao;
+  $("btnRefresh").disabled = true;
+  limparAvisos();
+  setStatus("lendo o perfil", 6);
+  S.stamp = null;
+
+  if(forcar){ try{ await S.mcp.invalidate(SERVER); }catch(e){} }
+
+  /* perfil + zonas + índice, em paralelo */
+  const [perfil, zonas, lista] = await Promise.allSettled([
+    ler("get_athlete_profile", {}, HORA12),
+    ler("get_athlete_zones",   {}, HORA12),
+    ler("list_activities",     { first:N_LISTA }, forcar ? 0 : MIN15, true)
+  ]);
+  if(g !== S.geracao) return;
+
+  if(perfil.status === "fulfilled") S.perfil = P(perfil.value);
+  if(zonas.status  === "fulfilled") S.zonas  = P(zonas.value);
+
+  if(lista.status !== "fulfilled"){
+    const [t,c] = textoErro(lista.reason);
+    aviso(t, c);
+    setStatus("falhou", 0);
+    $("btnRefresh").disabled = false;
+    return;
+  }
+
+  const bruto = P(lista.value);
+  const ativ = (bruto && Array.isArray(bruto.activities)) ? bruto.activities : [];
+  S.rides = ativ
+    .filter(a => /ride/i.test(a.sport_type || ""))
+    .map(a => {
+      const s = a.summary || {};
+      return {
+        id: String(a.id), nome: a.name || "Pedalada", data: a.start_local,
+        dist: s.distance || 0, tempo: s.moving_time || 0, total: s.elapsed_time || 0,
+        elev: s.elevation_gain || 0, velMs: s.avg_speed || 0, velMax: s.max_speed || null,
+        esforco: s.relative_effort ?? null, cal: s.total_calories ?? null,
+        cadLista: s.avg_cadence ?? null,
+        ms: new Date(a.start_local).getTime()
+      };
+    })
+    .sort((a,b) => b.ms - a.ms);
+
+  if(!S.rides.length){
+    aviso("Nenhuma pedalada nas últimas atividades",
+      "As atividades mais recentes desta conta não são de bike. Registre um pedal e toque em Atualizar.", "warn");
+    setStatus("sem pedais", 0);
+    $("btnRefresh").disabled = false;
+    return;
+  }
+
+  cabecalho();
+  setStatus("lendo cada pedal", 22);
+  render();
+
+  /* detalhe de cada pedal, em lotes */
+  const alvo = S.rides.slice(0, N_DET);
+  let falhas = 0, ultimoErro = null, feitos = 0, erroTraco = null;
+  for(let i=0; i<alvo.length; i+=4){
+    const lote = alvo.slice(i, i+4);
+    const res = await Promise.allSettled(
+      lote.map(a => ler("get_activity_performance", { activity_id:a.id }, forcar ? 0 : HORA12))
+    );
+    if(g !== S.geracao) return;
+    res.forEach((r,k) => {
+      if(r.status === "fulfilled" && P(r.value)) S.det[lote[k].id] = r.value;
+      else { falhas++; ultimoErro = r.reason; }
+    });
+    feitos += lote.length;
+    setStatus("lendo cada pedal", 22 + Math.round(48*feitos/alvo.length));
+    render();
+  }
+
+  /* traçado do último pedal */
+  setStatus("desenhando o traçado", 78);
+  try{
+    S.stream = P(await ler("get_activity_streams",
+      { activity_id:S.rides[0].id, streams:["distance","altitude","heart_rate","cadence","time"], resolution:RES },
+      forcar ? 0 : HORA12));
+  }catch(e){
+    S.stream = null;
+    erroTraco = e;
+  }
+  if(g !== S.geracao) return;
+
+  render();
+  parecer();
+
+  /* Cada falha ganha o seu próprio aviso: perder pedais encurta a tendência,
+     perder o traçado só apaga o desenho — são consequências diferentes. */
+  if(falhas){
+    const [t,c] = textoErro(ultimoErro);
+    const autz = ehAutz(ultimoErro && ultimoErro.code);
+    aviso(t, autz ? c : c + " A tendência abaixo usa os " +
+      (alvo.length - falhas) + " de " + alvo.length + " pedais que foram lidos.",
+      autz ? undefined : "warn");
+  }
+  if(erroTraco){
+    const [t,c] = textoErro(erroTraco);
+    aviso(t, c + " O traçado e o tempo em zona deste pedal ficaram de fora; o resto da carta está completo.", "warn");
+  }
+
+  const quando = S.stamp ? new Date(S.stamp) : new Date();
+  setStatus("lido " + quando.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"}), 100);
+  $("btnRefresh").disabled = false;
+}
+
+function cabecalho(){
+  const p = S.perfil || {}, z = S.zonas || {};
+  const b = [];
+  const nome = [p.first_name, p.last_name].filter(Boolean).join(" ");
+  if(nome) b.push(nome);
+  if(p.location && p.location.city) b.push(String(p.location.city).trim());
+  if(p.weight) b.push(p.weight + " kg");
+  if(z.ftp) b.push("FTP " + z.ftp + " W" + (z.ftp_is_estimated ? " estimado" : ""));
+  $("athlete").textContent = b.join("  ·  ");
+}
+
+/* ============================================================================
+   CÁLCULO
+   ============================================================================ */
+function zonasFC(){
+  const z = (S.zonas && S.zonas.heart_rate_zones) || [];
+  return z.map(x => [x.min ?? 0, x.max ?? 220]);
+}
+
+/* Zonas do Strava por % da FC máxima: Z1 <65%, Z2 65–81%, Z3 81–89%, Z4 89–97%.
+   Como a origem declarada é `MaxHeartRateFromAge`, vale conferir as faixas em
+   uso contra a FC máxima que o teste mediu de verdade. */
+const CORTES = [0.65, 0.81, 0.89, 0.97];
+function conferirZonas(){
+  const Z = zonasFC();
+  if(Z.length < 5) return null;
+  const alvo  = CORTES.map(p => Math.floor(ERGO.fcMax*p));
+  const atual = [Z[0][1], Z[1][1], Z[2][1], Z[3][1]];
+  const desvio = Math.max.apply(null, atual.map((v,i) => Math.abs(v-alvo[i])));
+  return { alvo, atual, desvio, confere: desvio <= 1 };
+}
+
+/* O VO2 máx do laudo é relativo ao peso do dia do exame. A capacidade absoluta
+   (L/min) é que é fisiológica — recalculada no peso de hoje, ela separa o que
+   veio de treino do que veio da balança. */
+function calcTeto(peso, ftp){
+  const abs = ERGO.vo2max * ERGO.peso;      // ml/min
+  const rel = abs / peso;                   // ml/kg/min no peso de hoje
+  /* Potência aeróbica máxima na bike pela equação da ACSM para cicloergômetro
+     (VO2 = 10,8·W/kg + 7). O teste foi em esteira, então o limite inferior
+     aplica 7% de desconto de modalidade: é extrapolação, não medida — por isso
+     uma faixa, e nunca um número único. */
+  const pot = v => (v - 7) * peso / 10.8;
+  const mapDe = pot(rel*0.93), mapAte = pot(rel);
+  const mapMed = (mapDe + mapAte)/2;
+  return { abs, rel, ganhoPeso: rel - ERGO.vo2max, mapDe, mapAte, mapMed,
+           razao: (ftp && mapMed > 0) ? ftp/mapMed : null,
+           quedaFC: ERGO.fcMax - ERGO.fcPico1min,
+           meses: (Date.now() - new Date(ERGO.data).getTime())/(30.44*864e5) };
+}
+
+function calcular(){
+  const peso = (S.perfil && S.perfil.weight) || 75;
+  const ftp  = (S.zonas && S.zonas.ftp) || 200;
+
+  const rides = S.rides.map(a => {
+    const d = S.det[a.id] || {};
+    const watts = d.average_watts ?? null;
+    const fc    = d.average_heartrate ?? null;
+    const cad   = d.average_cadence ?? a.cadLista ?? null;
+    const IF    = watts ? watts/ftp : null;
+    return Object.assign({}, a, {
+      watts, fc, cad,
+      fcMax: d.max_heartrate ?? null,
+      medidor: d.has_device_watts === true,
+      temFC: d.has_heartrate === true,
+      laps: Array.isArray(d.laps) ? d.laps : null,
+      velKmh: a.velMs * 3.6,
+      subidaKm: a.dist ? a.elev/(a.dist/1000) : 0,
+      ef: (watts && fc) ? watts/fc : null,   // watts por batimento
+      wkg: watts ? watts/peso : null,
+      IF, tss: IF ? (a.tempo*IF*IF)/36 : null
+    });
+  });
+
+  const u = rides[0], hoje = Date.now();
+  const x = r => -(hoje - r.ms)/864e5;
+
+  const sEF  = rides.filter(r=>r.ef ).map(r=>({x:x(r), y:r.ef }));
+  const sWkg = rides.filter(r=>r.wkg).map(r=>({x:x(r), y:r.wkg}));
+  const sCad = rides.filter(r=>r.cad).map(r=>({x:x(r), y:r.cad}));
+  const regEF = regressao(sEF), regWkg = regressao(sWkg), regCad = regressao(sCad);
+
+  /* Veredito combinado. A eficiência aeróbica pesa mais: é o sinal
+     menos contaminado por vento, trânsito e escolha de rota. */
+  let acc = 0, w = 0;
+  if(regEF ){ acc += 0.55*regEF.pctMes;  w += 0.55; }
+  if(regWkg){ acc += 0.30*regWkg.pctMes; w += 0.30; }
+  if(regCad){ acc += 0.15*regCad.pctMes; w += 0.15; }
+  const pctMes = w ? acc/w : null;
+  const direcao = pctMes==null ? "indef" : pctMes > 1.5 ? "up" : pctMes < -1.5 ? "down" : "flat";
+
+  /* Deriva cardíaca do último pedal: 1ª metade contra a 2ª, pelas parciais. */
+  let deriva = null;
+  if(u.laps && u.laps.length >= 4){
+    const v = u.laps.filter(l => l.avg_watts && l.avg_hr && l.moving_time > 60);
+    const tot = soma(v.map(l=>l.moving_time));
+    let a=0; const A=[], B=[];
+    for(const l of v){ (a < tot/2 ? A : B).push(l); a += l.moving_time; }
+    const ef = arr => {
+      const t = soma(arr.map(l=>l.moving_time));
+      if(!t) return null;
+      return (soma(arr.map(l=>l.avg_watts*l.moving_time))/t) / (soma(arr.map(l=>l.avg_hr*l.moving_time))/t);
+    };
+    const p=ef(A), q=ef(B);
+    if(p && q) deriva = ((q-p)/p)*100;
+  }
+
+  /* Tempo em zona, pelo traçado amostrado. */
+  let zonas = null;
+  const st = S.stream;
+  if(st && Array.isArray(st.heart_rate) && st.heart_rate.length > 5){
+    const Z = zonasFC();
+    if(Z.length){
+      const t = Array.isArray(st.time) && st.time.length === st.heart_rate.length ? st.time : null;
+      const cont = new Array(Z.length).fill(0);
+      let total = 0;
+      for(let i=0;i<st.heart_rate.length;i++){
+        const hr = st.heart_rate[i];
+        if(!hr) continue;
+        const dt = t ? (i ? t[i]-t[i-1] : 0) : 1;
+        if(dt <= 0) continue;
+        let k = Z.findIndex(z => hr >= z[0] && hr <= z[1]);
+        if(k < 0) k = hr < Z[0][0] ? 0 : Z.length-1;
+        cont[k] += dt; total += dt;
+      }
+      if(total > 0) zonas = { pct: cont.map(c => c/total*100), seg: cont, total, Z };
+    }
+  }
+
+  /* Carga diária. Só os pedais lidos em detalhe têm TSS, porque ele depende
+     dos watts; os mais antigos entram pelo esforço relativo do próprio Strava,
+     convertido pelo fator médio observado nos pedais que têm as duas medidas.
+     Sem isso a curva começaria com meses de zeros e afundaria o condicionamento. */
+  const dupla = rides.filter(r => r.tss && r.esforco);
+  const fatorCarga = dupla.length ? soma(dupla.map(r => r.tss/r.esforco))/dupla.length : null;
+  rides.forEach(r => {
+    r.carga = r.tss != null ? r.tss : (fatorCarga && r.esforco ? r.esforco*fatorCarga : null);
+    r.cargaConvertida = r.tss == null && r.carga != null;
+  });
+  const comCarga = rides.filter(r => r.carga);
+  const convertidos = comCarga.filter(r => r.cargaConvertida).length;
+
+  const inicio = comCarga.length ? Math.min.apply(null, comCarga.map(r=>r.ms)) : hoje;
+  const nDias = Math.max(1, Math.ceil((hoje-inicio)/864e5)+1);
+  const dia = new Array(nDias).fill(0);
+  for(const r of comCarga){
+    const i = Math.floor((r.ms-inicio)/864e5);
+    if(i>=0 && i<nDias) dia[i] += r.carga;
+  }
+  let ctl=0, atl=0; const curva=[];
+  for(let i=0;i<nDias;i++){
+    ctl += (dia[i]-ctl)/42;
+    atl += (dia[i]-atl)/7;
+    curva.push({ ctl, atl, tsb:ctl-atl, ts:inicio+i*864e5 });
+  }
+  const forma = curva[curva.length-1];
+
+  /* Grupo de pedais comparáveis: mesma faixa de distância e de subida. */
+  /* Comparáveis: distância dentro de 18% e subida por km dentro de 35% — a
+     tolerância precisa ser relativa, senão um pedal de 11 m/km entra como
+     "parecido" com um de 7 m/km e a diferença de velocidade, que é do
+     terreno, aparece como se fosse ganho de forma. */
+  const tolSubida = Math.max(2, u.subidaKm*0.35);
+  const pares = rides.slice(1).filter(r =>
+    u.dist && Math.abs(r.dist-u.dist)/u.dist < 0.18 &&
+    Math.abs(r.subidaKm-u.subidaKm) < tolSubida && r.watts);
+  const ref = pares.length ? {
+    n: pares.length,
+    velKmh: media(pares,r=>r.velKmh), fc: media(pares,r=>r.fc), watts: media(pares,r=>r.watts),
+    ef: media(pares,r=>r.ef), cad: media(pares,r=>r.cad), tempo: media(pares,r=>r.tempo),
+    esforco: media(pares,r=>r.esforco)
+  } : null;
+
+  const janela = (de,ate) => soma(rides.filter(r=>{ const d=(hoje-r.ms)/864e5; return d>=de && d<ate; }).map(r=>r.dist/1000));
+
+  /* Sensor de cadência travado: mesmo valor em quase todo o pedal pedalando. */
+  let cadTravada = false, cadModa = null;
+  if(st && Array.isArray(st.cadence)){
+    const c = st.cadence.filter(v => v > 0);
+    if(c.length > 20){
+      const m = {}; c.forEach(v => m[v] = (m[v]||0)+1);
+      const top = Object.entries(m).sort((a,b)=>b[1]-a[1])[0];
+      cadModa = Number(top[0]);
+      cadTravada = top[1]/c.length > 0.6;
+    }
+  }
+
+  return { rides, u, peso, ftp, teto: calcTeto(peso, ftp), zonasConf: conferirZonas(),
+           regEF, regWkg, regCad, pctMes, direcao, deriva, zonas,
+           curva, forma, ref, cadTravada, cadModa, sEF, sWkg, sCad, convertidos, tolSub:tolSubida,
+           diasCarga: Math.round((hoje-inicio)/864e5),
+           km4: janela(0,28), km4ant: janela(28,56),
+           comDados: rides.filter(r=>r.ef).length };
+}
+
+/* ============================================================================
+   DESENHO
+   ============================================================================ */
+const NS = "http://www.w3.org/2000/svg";
+function el(t,a,txt){
+  const e = document.createElementNS(NS,t);
+  for(const k in a) e.setAttribute(k, a[k]);
+  if(txt != null) e.textContent = txt;
+  return e;
+}
+const rot = (x,y,txt,cor,anchor,size) =>
+  el("text",{x,y,fill:cor,"text-anchor":anchor||"start","font-family":"IBM Plex Mono, monospace","font-size":size||9.5},txt);
+
+function sparkline(serie, reg, dir){
+  const W=78,H=26,P=3;
+  const s = el("svg",{viewBox:"0 0 "+W+" "+H,width:W,height:H,"aria-hidden":"true",style:"flex:none"});
+  if(!serie || serie.length < 2) return s;
+  const xs=serie.map(p=>p.x), ys=serie.map(p=>p.y);
+  const x0=Math.min.apply(null,xs), x1=Math.max.apply(null,xs);
+  const y0=Math.min.apply(null,ys), y1=Math.max.apply(null,ys);
+  const sx = v => P + (x1===x0?0:(v-x0)/(x1-x0))*(W-2*P);
+  const sy = v => H-P - (y1===y0?(H-2*P)/2:(v-y0)/(y1-y0))*(H-2*P);
+  if(reg) s.appendChild(el("line",{
+    x1:sx(x0), y1:sy(reg.intercept+reg.slope*x0), x2:sx(x1), y2:sy(reg.intercept+reg.slope*x1),
+    stroke: dir==="up"?PAL.gain : dir==="down"?PAL.trace : PAL.soft,
+    "stroke-width":1.4, "stroke-dasharray":"3 2" }));
+  const ult = serie.reduce((a,b)=> b.x>a.x?b:a, serie[0]);
+  serie.forEach(p => s.appendChild(el("circle",{
+    cx:sx(p.x), cy:sy(p.y), r: p===ult?2.4:1.7,
+    fill: p===ult ? (dir==="up"?PAL.gain : dir==="down"?PAL.trace : PAL.ink) : PAL.ink,
+    opacity: p===ult ? 1 : .45 })));
+  return s;
+}
+
+function desenharTraco(c){
+  const svg = $("traceSvg");
+  svg.innerHTML = "";
+  const W=900,H=340,L=46,R=38,T=14,B=26;
+  const st = S.stream;
+
+  let dist, alt, fc, cad;
+  if(st && Array.isArray(st.distance) && st.distance.length > 3){
+    dist = st.distance; alt = st.altitude||[]; fc = st.heart_rate||[]; cad = st.cadence||[];
+  } else if(c.u.laps && c.u.laps.length){
+    let acc=0; dist=[]; fc=[]; alt=[]; cad=[];
+    c.u.laps.forEach(l => { acc += l.distance||0; dist.push(acc); fc.push(l.avg_hr||0); });
+  } else {
+    svg.appendChild(rot(W/2, H/2, "traçado indisponível para este pedal", PAL.faint, "middle", 13));
+    return;
+  }
+
+  const dMax = Math.max.apply(null, dist) || 1;
+  const px = i => L + (dist[i]/dMax)*(W-L-R);
+  const hMid = T + (H-T-B)*0.62;
+
+  const fcv = fc.filter(v => v > 0);
+  if(fcv.length){
+    const lo = Math.max(55, Math.min.apply(null,fcv)-8), hi = Math.max.apply(null,fcv)+6;
+    const yFC = v => hMid - ((v-lo)/(hi-lo))*(hMid-T);
+
+    /* faixas de zona ao fundo */
+    zonasFC().forEach((z,i) => {
+      const yTop = yFC(Math.min(z[1],hi)), yBot = yFC(Math.max(z[0],lo));
+      const y = Math.max(T,yTop), h = Math.min(hMid,yBot) - y;
+      if(h <= 0) return;
+      svg.appendChild(el("rect",{x:L,y,width:W-L-R,height:h,fill:PAL.z[i]||PAL.z[4]}));
+      if(h > 13) svg.appendChild(rot(W-R+6, y+h/2+3.5, "Z"+(i+1), PAL.faint));
+    });
+
+    /* cadência, a lápis azul, atrás da FC */
+    const cadv = cad.filter(v => v > 0);
+    if(cadv.length > 3){
+      const cLo = Math.min.apply(null,cadv)-5, cHi = Math.max.apply(null,cadv)+5;
+      const yC = v => hMid - ((v-cLo)/((cHi-cLo)||1))*(hMid-T)*0.5 - (hMid-T)*0.06;
+      let d = "", aberto = false;
+      cad.forEach((v,i) => { if(v > 0){ d += (aberto?"L":"M") + px(i).toFixed(1) + " " + yC(v).toFixed(1) + " "; aberto = true; } else aberto = false; });
+      if(d) svg.appendChild(el("path",{d,fill:"none",stroke:PAL.pencil,"stroke-width":1.1,opacity:.5,"stroke-linejoin":"round"}));
+    }
+
+    /* traçado de FC */
+    let d = "", aberto = false;
+    fc.forEach((v,i) => { if(v > 0){ d += (aberto?"L":"M") + px(i).toFixed(1) + " " + yFC(v).toFixed(1) + " "; aberto = true; } else aberto = false; });
+    svg.appendChild(el("path",{d,fill:"none",stroke:PAL.trace,"stroke-width":1.9,"stroke-linejoin":"round","stroke-linecap":"round"}));
+
+    [lo,(lo+hi)/2,hi].forEach(v => svg.appendChild(rot(L-8, yFC(v)+3.5, Math.round(v), PAL.faint, "end")));
+  }
+
+  if(alt.length){
+    const lo = Math.min.apply(null,alt)-2, hi = Math.max.apply(null,alt)+2;
+    const yA = v => (H-B) - ((v-lo)/((hi-lo)||1))*((H-B)-hMid-12);
+    let d = "M " + L + " " + (H-B) + " ";
+    alt.forEach((v,i) => d += "L " + px(i).toFixed(1) + " " + yA(v).toFixed(1) + " ");
+    d += "L " + px(alt.length-1).toFixed(1) + " " + (H-B) + " Z";
+    svg.appendChild(el("path",{d,fill:PAL.reliefFill}));
+    let dl = "";
+    alt.forEach((v,i) => dl += (i?"L":"M") + px(i).toFixed(1) + " " + yA(v).toFixed(1) + " ");
+    svg.appendChild(el("path",{d:dl,fill:"none",stroke:PAL.reliefLine,"stroke-width":1.3}));
+    svg.appendChild(rot(L-8, yA(hi)+9, Math.round(hi)+" m", PAL.faint, "end"));
+  }
+
+  svg.appendChild(el("line",{x1:L,y1:H-B,x2:W-R,y2:H-B,stroke:PAL.rule,"stroke-width":1}));
+  const passo = dMax > 40000 ? 10000 : dMax > 15000 ? 5000 : 2000;
+  for(let m=0; m<=dMax; m+=passo){
+    const xx = L + (m/dMax)*(W-L-R);
+    svg.appendChild(el("line",{x1:xx,y1:H-B,x2:xx,y2:H-B+4,stroke:PAL.rule,"stroke-width":1}));
+    svg.appendChild(rot(xx, H-B+16, (m/1000) + (m===0 ? " km" : ""), PAL.faint, "middle"));
+  }
+}
+
+function desenharCarga(c){
+  const svg = $("loadSvg");
+  svg.innerHTML = "";
+  const W=900,H=250,L=38,R=124,T=14,B=24;
+  const d = c.curva.slice(-120);
+  if(d.length < 5){
+    svg.appendChild(rot(W/2,H/2,"histórico curto demais para a curva",PAL.faint,"middle",13));
+    return;
+  }
+  const maxY = Math.max.apply(null, d.map(v => Math.max(v.ctl,v.atl))) * 1.18 || 1;
+  const px = i => L + (i/(d.length-1))*(W-L-R);
+  const py = v => (H-B) - (v/maxY)*((H-B)-T);
+  const esc = ((H-B)-T)/(maxY*2.2);
+  const yZero = T + ((H-B)-T)*0.5;
+  /* o TSB oscila mais que a escala das outras duas linhas: prende no quadro */
+  const yT = v => Math.max(T, Math.min(H-B, yZero - v*esc));
+
+  svg.appendChild(el("line",{x1:L,y1:yZero,x2:W-R,y2:yZero,stroke:PAL.rule,"stroke-width":1,"stroke-dasharray":"2 3"}));
+  let dt = "";
+  d.forEach((v,i) => dt += (i?"L":"M") + px(i).toFixed(1) + " " + yT(v.tsb).toFixed(1) + " ");
+  svg.appendChild(el("path",{d:dt,fill:"none",stroke:PAL.pencil,"stroke-width":1.2,opacity:.55}));
+
+  const linha = (campo,cor,lw,dash) => {
+    let p = "";
+    d.forEach((v,i) => p += (i?"L":"M") + px(i).toFixed(1) + " " + py(v[campo]).toFixed(1) + " ");
+    const a = {d:p,fill:"none",stroke:cor,"stroke-width":lw};
+    if(dash) a["stroke-dasharray"] = dash;
+    svg.appendChild(el("path",a));
+  };
+  linha("ctl", PAL.ink, 2);
+  linha("atl", PAL.trace, 1.4, "4 3");
+
+  svg.appendChild(el("line",{x1:L,y1:H-B,x2:W-R,y2:H-B,stroke:PAL.rule}));
+  /* Rótulos à direita. Quando condicionamento e fadiga estão emparelhados —
+     que é o caso comum — as duas linhas quase se tocam, então os textos são
+     afastados para o mínimo legível antes de serem escritos. */
+  const f = c.forma;
+  const marcas = [
+    { y: py(f.ctl),  t: "condicionamento " + Math.round(f.ctl), cor: PAL.ink },
+    { y: py(f.atl),  t: "fadiga " + Math.round(f.atl),          cor: PAL.trace },
+    { y: yT(f.tsb),  t: "forma " + (f.tsb>0?"+":"") + Math.round(f.tsb), cor: PAL.pencil }
+  ].sort((a,b) => a.y - b.y);
+  const GAP = 12;
+  for(let i=1;i<marcas.length;i++)
+    if(marcas[i].y - marcas[i-1].y < GAP) marcas[i].y = marcas[i-1].y + GAP;
+  const excesso = marcas[marcas.length-1].y - (H-B);
+  if(excesso > 0) marcas.forEach(m => m.y -= excesso);
+  marcas.forEach(m => {
+    const y = Math.max(T+7, m.y);
+    svg.appendChild(el("line",{x1:W-R+2,y1:y-3.5,x2:W-R+6,y2:y-3.5,stroke:m.cor,"stroke-width":1,opacity:.5}));
+    svg.appendChild(rot(W-R+8, y, m.t, m.cor, "start", 10));
+  });
+
+  [0, Math.floor(d.length/2), d.length-1].forEach(i =>
+    svg.appendChild(rot(px(i), H-B+16, fmtCurta(d[i].ts), PAL.faint,
+      i===0 ? "start" : i===d.length-1 ? "end" : "middle")));
+}
+
+/* ============================================================================
+   TETO AERÓBICO
+   O Strava responde "estou melhorando?". O teste responde "quanto teto eu
+   tenho, e o meu limite hoje é o teto ou a base?" — que é outra pergunta.
+   ============================================================================ */
+function renderTeto(c){
+  const t = c.teto;
+  const m = Math.round(t.meses);
+  const mesesTxt = t.meses < 1 ? "há poucas semanas"
+                 : t.meses < 18 ? "há " + m + (m === 1 ? " mês" : " meses")
+                 : "há " + dec(t.meses/12,1) + " anos — vale repetir";
+  $("tetoMeta").textContent = "teste ergométrico de " + fmtData(ERGO.data) + " · " + ERGO.protocolo +
+    " · " + mesesTxt;
+
+  /* A razão entre o FTP e a potência aeróbica máxima diz onde está o gargalo:
+     um ciclista treinado sustenta 75–80% do próprio teto por uma hora. */
+  const r = t.razao;
+  let titulo, corpo;
+  if(r == null){
+    titulo = "Teto medido, base ainda sem referência";
+    corpo = "<p>Falta o FTP para comparar o que você sustenta com o teto que o teste mostrou.</p>";
+  } else if(r < 0.72){
+    titulo = "Teto sobrando, base curta";
+    corpo = "<p>Você sustenta cerca de <b>" + dec(r*100,0) + "%</b> do seu próprio teto aeróbico por uma hora. " +
+      "Um ciclista treinado fica entre 75% e 80%. A diferença não é falta de motor — é motor pouco aproveitado.</p>" +
+      "<p>Na prática: o seu limite hoje não é a capacidade máxima, é quanto dela você consegue segurar por muito tempo. " +
+      "Isso se resolve com volume em zona 2, não com tiros. E é exatamente o que o seu objetivo no Strava já dizia.</p>";
+  } else if(r <= 0.80){
+    titulo = "Teto e base emparelhados";
+    corpo = "<p>Você sustenta <b>" + dec(r*100,0) + "%</b> do teto por uma hora, dentro da faixa de 75% a 80% de quem treina com regularidade. " +
+      "Base e capacidade máxima estão no mesmo nível.</p>" +
+      "<p>Daqui para frente, ganhar ritmo depende de levantar o próprio teto — o que pede intensidade, " +
+      "não só mais quilômetros.</p>";
+  } else {
+    titulo = "Base encostada no teto";
+    corpo = "<p>Você sustenta <b>" + dec(r*100,0) + "%</b> do teto por uma hora, acima da faixa usual de 75% a 80%. " +
+      "A base está bem construída e o gargalo passou a ser a capacidade máxima.</p>" +
+      "<p>Mais volume tende a render pouco agora; subir o teto pede blocos curtos e fortes.</p>";
+  }
+  $("tetoWord").textContent = titulo;
+  $("tetoLead").innerHTML = corpo;
+
+  const zc = c.zonasConf;
+  const cards = [
+    ["vo₂ máx hoje", dec(t.rel,1), "ml/kg/min",
+      dec(ERGO.vo2max,1) + " a " + ERGO.peso + " kg no exame"],
+    ["ganho pelo peso", (t.ganhoPeso>=0?"+":"−") + dec(Math.abs(t.ganhoPeso),1), "ml/kg/min",
+      "só por sair de " + ERGO.peso + " para " + c.peso + " kg"],
+    ["fc máxima", int(ERGO.fcMax), "bpm",
+      zc && zc.confere ? "confirma as zonas" : "medida no teste"],
+    ["met máximo", dec(ERGO.met,1), "",
+      dec(ERGO.met/ERGO.metPrevisto*100,0) + "% do previsto"],
+    ["queda da fc", int(t.quedaFC), "bpm", "no 1º min após o pico"],
+    ["potência aeróbica", int(t.mapDe) + "–" + int(t.mapAte), "W", "extrapolada para a bike"],
+    ["ftp sobre o teto", r != null ? dec(r*100,0) : "—", "%", "treinado: 75–80%"],
+    ["aptidão", ERGO.aptidao.replace(/\s*\(.*\)/,""), "", "classificação AHA no laudo"]
+  ];
+  $("tetoCards").innerHTML = cards.map(a =>
+    '<div class="card"><div class="k">' + a[0] + '</div><div class="v">' + a[1] +
+    (a[2] ? "<small>" + a[2] + "</small>" : "") + "</div>" +
+    (a[3] ? '<div class="d flat">' + a[3] + "</div>" : "") + "</div>").join("");
+}
+
+/* ============================================================================
+   RENDER
+   ============================================================================ */
+function render(){
+  const c = S.calc = calcular();
+  const u = c.u;
+
+  /* --- veredito --- */
+  const palavra = { up:"Progredindo", down:"Perdendo terreno", flat:"Estável", indef:"Ainda medindo" };
+  const w = $("verdictWord");
+  w.textContent = palavra[c.direcao];
+  w.className = "verdict-word " + c.direcao;
+  $("windowLabel").textContent = c.rides.length + " pedais · " +
+    fmtData(c.rides[c.rides.length-1].data) + " a " + fmtData(u.data);
+
+  if(c.regEF){
+    const s = c.regEF.pctMes > 0 ? "+" : "−";
+    $("verdictLead").innerHTML =
+      "Sua eficiência aeróbica — quantos watts saem por batimento — está em <b>" +
+      s + dec(Math.abs(c.regEF.pctMes),1) + "% ao mês</b> ao longo de " + c.regEF.n +
+      " pedais. É o sinal mais confiável que você tem sem medidor de potência: quando sobe, " +
+      "o mesmo custo cardíaco está rendendo mais bicicleta.";
+  } else {
+    $("verdictLead").textContent =
+      "Ainda não há pedais suficientes com frequência cardíaca para traçar uma tendência. " +
+      "Bastam três saídas com o monitor no peito.";
+  }
+
+  const notas = [];
+  /* A palavra do veredito vem da mistura dos três sinais, não só do primeiro
+     número citado ao lado — sem dizer isso, "Estável" sobre "+1,5%" confunde. */
+  if(c.pctMes != null && [c.regEF,c.regWkg,c.regCad].filter(Boolean).length > 1)
+    notas.push("O veredito combina os três sinais ao lado — eficiência aeróbica pesa mais, cadência menos — e dá " +
+      (c.pctMes>0?"+":"−") + dec(Math.abs(c.pctMes),1) + "% ao mês.");
+  if(c.regEF && c.regEF.r2 < 0.25)
+    notas.push("A dispersão é alta (r² = " + dec(c.regEF.r2,2) + "): leia a tendência como direção, não como número exato.");
+  if(c.km4 || c.km4ant)
+    notas.push("Volume: " + int(c.km4) + " km nas últimas 4 semanas contra " + int(c.km4ant) + " km nas 4 anteriores.");
+  const note = $("verdictNote");
+  note.hidden = !notas.length;
+  note.textContent = notas.join(" ");
+
+  const sinais = [
+    { n:"Eficiência aeróbica", u:"watts por batimento", reg:c.regEF,  s:c.sEF,  v:u.ef  != null ? dec(u.ef,2)  : null },
+    { n:"Potência relativa",   u:"watts por quilo",     reg:c.regWkg, s:c.sWkg, v:u.wkg != null ? dec(u.wkg,2) : null },
+    { n:"Cadência",            u:"rotações por minuto", reg:c.regCad, s:c.sCad, v:u.cad != null ? int(u.cad)   : null }
+  ];
+  const box = $("signals");
+  box.innerHTML = "";
+  for(const s of sinais){
+    const dir = !s.reg ? "flat" : s.reg.pctMes > 1.5 ? "up" : s.reg.pctMes < -1.5 ? "down" : "flat";
+    const d = document.createElement("div");
+    d.className = "signal";
+    d.innerHTML =
+      '<div class="signal-name">' + s.n + "<em>" + s.u + "</em></div>" +
+      '<div class="signal-val">' + (s.v ?? "—") +
+        '<span class="' + dir + '">' + (s.reg ? (s.reg.pctMes>0?"+":"−") + dec(Math.abs(s.reg.pctMes),1) + "%/mês" : "sem série") + "</span></div>";
+    d.appendChild(sparkline(s.s, s.reg, dir));
+    box.appendChild(d);
+  }
+
+  /* --- teto aeróbico --- */
+  renderTeto(c);
+
+  /* --- último pedal --- */
+  $("rideName").textContent = u.nome;
+  $("rideWhen").textContent = fmtData(u.data) + " · " +
+    new Date(u.data).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+  $("rideMeta").textContent = u.medidor ? "potência medida no pedivela" : "potência estimada pelo Strava";
+  desenharTraco(c);
+
+  /* zonas */
+  const zs = $("zones");
+  if(c.zonas){
+    zs.hidden = false;
+    const NOMES = ["Z1 recuperação","Z2 base","Z3 tempo","Z4 limiar","Z5 máximo"];
+    $("zbar").innerHTML = c.zonas.pct.map((p,i) =>
+      '<div style="flex:' + Math.max(p,0.001) + ';background:var(--z' + (i+1) + ')' +
+      (i ? ';border-left:1px solid var(--rule)' : '') + '">' +
+      (p >= 8 ? "<b>" + Math.round(p) + "%</b>" : "") + "</div>").join("");
+    $("zkeys").innerHTML = c.zonas.pct.map((p,i) =>
+      "<span>" + (NOMES[i]||("Z"+(i+1))) + " " + c.zonas.Z[i][0] + "–" +
+      (i === c.zonas.pct.length-1 ? "máx" : c.zonas.Z[i][1]) + " bpm · " + dec(p,0) + "%</span>").join("");
+
+    /* De onde vêm as faixas. O Strava as declara como estimadas pela idade;
+       o teste mediu a FC máxima real, então dá para dizer se coincidem. */
+    const zc = c.zonasConf;
+    $("zoneSrc").textContent = !zc
+      ? ""
+      : zc.confere
+        ? "As faixas vêm do Strava, que as calcula por % de uma FC máxima estimada pela idade. O teste ergométrico de " +
+          fmtData(ERGO.data) + " mediu " + ERGO.fcMax + " bpm e as faixas acima batem com esse valor — ou seja, aqui elas são medidas, não estimadas."
+        : "Atenção: as faixas vêm do Strava, calculadas por % de uma FC máxima estimada pela idade. O teste mediu " +
+          ERGO.fcMax + " bpm, que daria Z2 até " + zc.alvo[1] + ", Z3 até " + zc.alvo[2] + " e Z4 até " + zc.alvo[3] +
+          " bpm — até " + zc.desvio + " bpm de diferença. Vale ajustar a FC máxima no Strava para as zonas ficarem certas.";
+  } else zs.hidden = true;
+
+  /* cards */
+  const parado = Math.round((u.total - u.tempo)/60);
+  const cards = [
+    ["distância",           km(u.dist), "km", null],
+    ["tempo em movimento",  dur(u.tempo), "", parado > 3 ? "+" + parado + " min parado" : null],
+    ["velocidade média",    dec(u.velKmh,1), "km/h", u.velMax ? "máx " + dec(u.velMax*3.6,0) : null],
+    ["subida",              int(u.elev), "m", dec(u.subidaKm,0) + " m/km"],
+    ["fc média",            int(u.fc), "bpm", u.fcMax ? "máx " + int(u.fcMax) : null],
+    ["potência",            int(u.watts), "W", u.wkg ? dec(u.wkg,2) + " W/kg" : null],
+    ["cadência",            int(u.cad), "rpm", null],
+    ["trabalho",            u.watts ? int(u.watts*u.tempo/1000) : "—", "kJ", u.cal ? int(u.cal) + " kcal" : null],
+    ["intensidade",         u.IF ? dec(u.IF,2) : "—", "IF", u.tss ? "carga " + int(u.tss) : null],
+    ["esforço relativo",    u.esforco != null ? int(u.esforco) : "—", "", null],
+    ["deriva cardíaca",     c.deriva != null ? (c.deriva>0?"+":"−") + dec(Math.abs(c.deriva),1) : "—", "%",
+      c.deriva != null ? (c.deriva > -5 ? "segurou o ritmo" : "caiu no fim") : null]
+  ];
+  $("rideCards").innerHTML = cards.map(a =>
+    '<div class="card"><div class="k">' + a[0] + '</div><div class="v">' + a[1] +
+    (a[2] ? "<small>" + a[2] + "</small>" : "") + "</div>" +
+    (a[3] ? '<div class="d flat">' + a[3] + "</div>" : "") + "</div>").join("");
+
+  /* avisos sobre a qualidade do dado */
+  const flags = [];
+  if(c.cadTravada) flags.push(["warn","Confira o sensor de cadência",
+    "O traçado marca " + c.cadModa + " rpm em mais de 60% do trecho pedalado, sem variar em subida nem em descida. " +
+    "Cadência real oscila o tempo todo — provavelmente o sensor perdeu o pareamento e o valor congelou. " +
+    "Cheque a bateria e o ímã antes de tratar cadência como problema de técnica."]);
+  if(c.deriva != null && c.deriva < -6) flags.push(["warn","Deriva cardíaca alta",
+    "Na segunda metade você entregou " + dec(Math.abs(c.deriva),0) + "% menos watts por batimento que na primeira. " +
+    "Isso costuma ser calor, hidratação ou ritmo inicial acima do sustentável — não falta de base."]);
+  $("rideFlags").innerHTML = "";
+  flags.forEach(f => {
+    const d = document.createElement("div");
+    d.className = "notice warn";
+    d.innerHTML = "<b></b><p></p>";
+    d.querySelector("b").textContent = f[1];
+    d.querySelector("p").textContent = f[2];
+    $("rideFlags").appendChild(d);
+  });
+
+  /* --- parciais --- */
+  const sec = $("sec-splits");
+  if(u.laps && u.laps.length > 1){
+    sec.hidden = false;
+    const wMax = Math.max.apply(null, u.laps.map(l => l.avg_watts || 0)) || 1;
+    $("splitsMeta").textContent = u.laps.length + " parciais de " + km(u.laps[0].distance) + " km";
+    let acum = 0;
+    $("splitsTable").innerHTML =
+      "<tr><th>Km</th><th>Tempo</th><th>Vel.</th><th>Subida</th><th>FC</th><th>Watts</th></tr>" +
+      u.laps.map(l => {
+        acum += l.distance || 0;
+        const v = l.moving_time ? (l.distance/l.moving_time)*3.6 : null;
+        const larg = Math.round(((l.avg_watts||0)/wMax)*38);
+        return "<tr><td>" + km(acum) + "</td><td>" + dur(l.moving_time||0) + "</td><td>" +
+          dec(v,1) + "</td><td>" + int(l.elevation_gain) + " m</td><td>" + int(l.avg_hr) + "</td><td>" +
+          '<span class="wbar" style="width:' + larg + 'px"></span>' + int(l.avg_watts) + "</td></tr>";
+      }).join("");
+  } else sec.hidden = true;
+
+  /* --- comparativo --- */
+  const ref = c.ref;
+  if(ref){
+    $("cmpMeta").textContent = ref.n + (ref.n === 1 ? " pedal" : " pedais") + " de ~" + km(u.dist) +
+      " km e " + dec(u.subidaKm,0) + " m/km de subida, com margem de 18% na distância e 35% na subida";
+    const linhas = [
+      ["Velocidade média",   u.velKmh, ref.velKmh, "km/h", 1, true],
+      ["FC média",           u.fc,     ref.fc,     "bpm",  0, false],
+      ["Potência",           u.watts,  ref.watts,  "W",    0, true],
+      ["Eficiência aeróbica",u.ef,     ref.ef,     "W/bpm",2, true],
+      ["Cadência",           u.cad,    ref.cad,    "rpm",  0, true],
+      ["Tempo em movimento", u.tempo ? u.tempo/60 : null, ref.tempo ? ref.tempo/60 : null, "min", 0, false]
+    ].filter(l => l[1] != null && l[2] != null && isFinite(l[1]) && isFinite(l[2]) && l[2] !== 0);
+    $("cmpTable").innerHTML =
+      "<tr><th>Métrica</th><th>Este pedal</th><th>Média dos parecidos</th><th>Diferença</th></tr>" +
+      linhas.map(l => {
+        const dif = ((l[1]-l[2])/l[2])*100;
+        const cls = Math.abs(dif) < 1.5 ? "flat" : (l[5] ? dif > 0 : dif < 0) ? "up" : "down";
+        return "<tr><td>" + l[0] + "</td><td>" + dec(l[1],l[4]) + " " + l[3] + "</td><td>" +
+          dec(l[2],l[4]) + " " + l[3] + '</td><td class="' + cls + '">' +
+          (dif>0?"+":"−") + dec(Math.abs(dif),1) + "%</td></tr>";
+      }).join("");
+  } else {
+    $("cmpMeta").textContent = "";
+    $("cmpTable").innerHTML = '<tr><td class="empty" colspan="4">Nenhum pedal recente serve de referência justa para este. Seriam necessários pedais entre ' +
+      km(u.dist*0.82) + " e " + km(u.dist*1.18) + " km com algo entre " +
+      dec(Math.max(0,u.subidaKm-c.tolSub),0) + " e " + dec(u.subidaKm+c.tolSub,0) +
+      " m de subida por km — comparar contra uma rota mais dura faria o terreno passar por ganho de forma.</td></tr>";
+  }
+
+  /* --- carga --- */
+  desenharCarga(c);
+  $("loadMeta").textContent = "médias exponenciais de 42 e 7 dias sobre " + c.diasCarga + " dias" +
+    (c.convertidos ? " · " + c.convertidos + " pedais mais antigos entram pelo esforço relativo do Strava" : "");
+  const f = c.forma, desde = Math.floor((Date.now()-u.ms)/864e5);
+  let titulo, texto;
+  if(f.tsb > 12){
+    titulo = "Descansado, talvez demais";
+    texto = "Faz " + desde + (desde===1?" dia":" dias") + " do último pedal e a fadiga caiu bem abaixo do condicionamento. " +
+            "Boa janela para um pedal forte, ou para um teste de subida se quiser um número de referência.";
+  } else if(f.tsb > -5){
+    titulo = "Em equilíbrio";
+    texto = "Carga e recuperação estão emparelhadas. É o estado em que dá para subir volume ou intensidade sem grande risco — mude uma das duas por semana, não as duas.";
+  } else if(f.tsb > -20){
+    titulo = "Carregando bem";
+    texto = "Você acumula trabalho um pouco mais rápido do que recupera, que é exatamente o que constrói base. Mantenha, garantindo um dia realmente leve na semana.";
+  } else {
+    titulo = "Fadiga acumulada";
+    texto = "A carga recente passou bastante do que o seu condicionamento sustenta hoje. Um ou dois dias fáceis agora rendem mais que um pedal forte a mais.";
+  }
+  $("formRead").innerHTML = '<div class="big"></div><p></p>';
+  $("formRead").querySelector(".big").textContent = titulo;
+  $("formRead").querySelector("p").textContent = texto;
+
+  /* --- rodapé --- */
+  $("foot").textContent =
+    "Fonte: Strava, pelo conector da sua conta — os dados são lidos a cada abertura e nada fica guardado nesta página. " +
+    (u.medidor
+      ? "Os watts vêm do seu medidor de potência."
+      : "Sem medidor de potência instalado: os watts são a estimativa do Strava a partir de peso, inclinação e velocidade. " +
+        "Servem para comparar você com você mesmo na mesma rota, não com terceiros.") +
+    " FTP de referência: " + c.ftp + " W" + ((S.zonas && S.zonas.ftp_is_estimated) ? " (estimado pelo Strava)" : "") +
+    ". Peso: " + c.peso + " kg. Tempo em zona calculado sobre o traçado amostrado, então é aproximado. " +
+    "O teto aeróbico vem do teste ergométrico de " + fmtData(ERGO.data) + " (" + ERGO.protocolo + "), digitado à mão — " +
+    "naquele exame o VO₂ máx foi estimado pelo estágio atingido, não medido por análise de gases, o que carrega erro " +
+    "típico de 10% a 15%. A potência aeróbica na bike é extrapolada dele pela equação da ACSM para cicloergômetro, " +
+    "atravessando de esteira para bicicleta: serve para situar a ordem de grandeza, não para prescrever treino. " +
+    "A leitura clínica do exame é do médico que o pediu, não desta página.";
+}
+
+/* ============================================================================
+   PARECER — regras determinísticas sobre os números já calculados
+   ============================================================================ */
+function parecer(){
+  const c = S.calc;
+  if(!c) return;
+  const u = c.u, Z = zonasFC();
+  const z2 = Z[1] || [115,143], z3 = Z[2] || [144,157];
+  const zonaDe = hr => { const i = Z.findIndex(z => hr >= z[0] && hr <= z[1]); return i < 0 ? Z.length : i+1; };
+  const foco = (S.perfil && S.perfil.current_focus && S.perfil.current_focus.open_text) || null;
+
+  const p = [];
+
+  /* 1 — leitura do último pedal */
+  let p1 = "No dia " + fmtData(u.data) + " você fez <b>" + km(u.dist) + " km</b> em <b>" + dur(u.tempo) +
+           "</b>, com " + int(u.elev) + " m de subida, a " + dec(u.velKmh,1) + " km/h de média.";
+  if(u.fc) p1 += " A frequência cardíaca média ficou em <b>" + int(u.fc) + " bpm</b>, zona " + zonaDe(u.fc) + ".";
+  if(u.IF) p1 += " A intensidade deu <b>" + dec(u.IF,2) + "</b> de IF" +
+                 (u.IF < 0.7 ? ", faixa de rodagem aeróbica." : u.IF < 0.85 ? ", faixa de tempo — um pedal firme." : ", perto do limiar: pedal duro.");
+  if(c.deriva != null) p1 += c.deriva > -5
+    ? " Você entregou praticamente os mesmos watts por batimento nas duas metades, o que indica ritmo bem dosado do começo ao fim."
+    : " Na segunda metade o rendimento por batimento caiu " + dec(Math.abs(c.deriva),0) + "%.";
+  p.push(p1);
+
+  /* 2 — tendência */
+  let p2;
+  if(c.regEF){
+    const s = c.regEF.pctMes > 0 ? "subindo" : "caindo";
+    p2 = "Ao longo de " + c.regEF.n + " pedais medidos, a eficiência aeróbica está <b>" + s + " " +
+         dec(Math.abs(c.regEF.pctMes),1) + "% ao mês</b>";
+    p2 += c.regEF.r2 < 0.25
+      ? ", mas com dispersão alta (r² = " + dec(c.regEF.r2,2) + "): trate como direção, não como promessa."
+      : ", com boa consistência entre as saídas (r² = " + dec(c.regEF.r2,2) + ").";
+    if(c.regWkg) p2 += " Os watts por quilo acompanham em " + (c.regWkg.pctMes>0?"+":"−") + dec(Math.abs(c.regWkg.pctMes),1) + "% ao mês.";
+    const dif = c.km4 - c.km4ant;
+    if(Math.abs(dif) > 20) p2 += " O volume " + (dif > 0 ? "subiu" : "caiu") + " de " + int(c.km4ant) +
+      " para " + int(c.km4) + " km entre os dois últimos blocos de quatro semanas" +
+      (dif < 0 ? ", e queda de volume derruba condicionamento antes de aparecer no ritmo." : ".");
+  } else {
+    p2 = "Ainda faltam pedais com frequência cardíaca registrada para afirmar se você está progredindo. " +
+         "Três saídas com o monitor no peito já fecham a primeira tendência.";
+  }
+  p.push(p2);
+
+  /* 3 — a maior alavanca agora */
+  let alavanca, acoes;
+  const cargaAlta = c.forma.tsb < -20;
+  const volumeCaiu = c.km4ant > 0 && c.km4 < c.km4ant*0.75;
+  const derivaRuim = c.deriva != null && c.deriva < -6;
+  const duroDemais = u.fc && u.fc > z3[0];
+
+  if(cargaAlta){
+    alavanca = "A maior alavanca agora não é treinar mais, é recuperar. Sua fadiga está " +
+      Math.round(Math.abs(c.forma.tsb)) + " pontos acima do que o condicionamento sustenta, e nesse estado o corpo não " +
+      "consolida o trabalho que você já fez — ele só acumula desgaste.";
+    acoes = [
+      "Dois dias fáceis seguidos: 40–60 min com FC abaixo de " + z2[1] + " bpm, sem perseguir segmento.",
+      "Só depois volte ao pedal longo, e recomece pelo volume que você fazia há quatro semanas.",
+      "Durma antes de treinar: com esta fadiga, uma noite curta vale mais que uma hora de bike."
+    ];
+  } else if(volumeCaiu){
+    alavanca = "A maior alavanca é regularidade, não intensidade. Seu volume caiu de " + int(c.km4ant) +
+      " para " + int(c.km4) + " km entre os dois últimos blocos de quatro semanas, e base aeróbica responde " +
+      "muito mais a frequência do que a esforço pontual.";
+    acoes = [
+      "Fixe três saídas por semana, mesmo que duas sejam de 45 min — constância vence duração.",
+      "Reponha o pedal longo do fim de semana e cresça 10% na distância a cada semana.",
+      "Mantenha a FC entre " + z2[0] + " e " + z2[1] + " bpm nas saídas curtas para não gastar a semana."
+    ];
+  } else if(derivaRuim){
+    alavanca = "A maior alavanca é o ritmo dos primeiros quilômetros. Você perdeu " + dec(Math.abs(c.deriva),0) +
+      "% de rendimento por batimento na segunda metade, e esse desenho quase sempre é largada acima do sustentável, " +
+      "calor ou hidratação — não falta de base.";
+    acoes = [
+      "Nos primeiros 20 min segure a FC abaixo de " + z2[1] + " bpm, mesmo que pareça lento demais.",
+      "Um gole a cada 15 min desde o km zero, não só quando a sede aparecer.",
+      "Repita a mesma rota daqui a duas semanas e compare a deriva: é o seu teste de progresso."
+    ];
+  } else if(duroDemais){
+    alavanca = "A maior alavanca é baixar o ritmo da maioria das saídas. Sua FC média no último pedal foi " +
+      int(u.fc) + " bpm — zona " + zonaDe(u.fc) + " —, e treinar quase sempre nessa faixa cansa o suficiente para atrapalhar " +
+      "e não o bastante para construir teto.";
+    acoes = [
+      "Duas das três saídas da semana em zona 2: FC entre " + z2[0] + " e " + z2[1] + " bpm, do início ao fim.",
+      "Guarde uma saída para os segmentos, com blocos de 8 min acima de " + z3[1] + " bpm.",
+      "Use marcha mais leve nas subidas para segurar a cadência acima de 70 rpm sem estourar a FC."
+    ];
+  } else {
+    alavanca = "Com carga equilibrada e tendência " +
+      (c.direcao === "up" ? "positiva" : "estável") + ", a maior alavanca agora é alongar o pedal longo. " +
+      "Base aeróbica cresce pela duração da saída mais longa da semana, não pela média de todas elas.";
+    acoes = [
+      "Estenda o pedal longo em 10% por semana — do atual " + km(u.dist) + " km para cerca de " + dec(u.dist*1.1/1000,0) + " km.",
+      "Nele, segure a FC entre " + z2[0] + " e " + z2[1] + " bpm nas primeiras duas horas.",
+      "Mantenha as saídas curtas leves; só uma sessão forte por semana enquanto o volume sobe."
+    ];
+  }
+  /* O teste ergométrico diz algo que o Strava sozinho não diz: se o gargalo é
+     o teto ou a base. Isso muda a natureza da recomendação, não só o tamanho. */
+  const rz = c.teto && c.teto.razao;
+  if(rz != null && rz < 0.72)
+    alavanca += " O teste ergométrico reforça a direção: você sustenta só " + dec(rz*100,0) +
+      "% do seu teto aeróbico por uma hora, contra 75% a 80% de quem treina regularmente. " +
+      "Sobra motor e falta base para usá-lo — e base se constrói com tempo em zona 2, não com tiro.";
+  else if(rz != null && rz > 0.80)
+    alavanca += " Aqui o teste ergométrico puxa para o outro lado: você já sustenta " + dec(rz*100,0) +
+      "% do seu teto aeróbico, acima da faixa usual. Mais volume renderia pouco; o que falta é levantar o teto.";
+
+  if(foco) alavanca += " Isso conversa direto com o seu objetivo declarado no Strava: " + foco.toLowerCase() + ".";
+  p.push(alavanca);
+
+  if(c.cadTravada){
+    acoes = acoes.slice(0,2);
+    acoes.push("Antes de mexer em cadência, troque a bateria do sensor e confira o ímã — o valor atual está travado.");
+  }
+
+  $("coachBody").innerHTML = p.map(t => "<p>" + t + "</p>").join("");
+  $("coachActions").innerHTML = "";
+  acoes.forEach(a => {
+    const li = document.createElement("li");
+    const s = document.createElement("span");
+    s.textContent = a;
+    li.appendChild(s);
+    $("coachActions").appendChild(li);
+  });
+  $("coachMeta").textContent = "regras fixas sobre os números acima · ações para as próximas duas semanas";
+}
+
+/* ---------- início ---------- */
+$("btnRefresh").addEventListener("click", () => {
+  carregar(true).catch(e => {
+    const [t,c] = textoErro(e);
+    aviso(t, c);
+    setStatus("falhou", 0);
+    $("btnRefresh").disabled = false;
+  });
+});
+
+iniciar().catch(e => {
+  const [t,c] = textoErro(e);
+  aviso(t, c);
+  setStatus("falhou", 0);
+  /* só reabre o botão se o conector chegou a existir — sem ele, tentar de novo dá no mesmo */
+  if(S.mcp) $("btnRefresh").disabled = false;
+});
+</script>
+
+</body></html>
