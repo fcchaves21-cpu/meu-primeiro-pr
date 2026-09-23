@@ -1141,12 +1141,6 @@
     return prefix + "_" + Date.now().toString(36) + Math.random().toString(36).slice(2,7);
   }
 
-  function hashRotate(str){
-    let h = 0;
-    for(let i=0;i<str.length;i++){ h = (h*31 + str.charCodeAt(i)) | 0; }
-    return (Math.abs(h) % 9) - 4; // -4..4 deg
-  }
-
   function todayStr(){
     const d = new Date();
     const m = String(d.getMonth()+1).padStart(2,"0");
@@ -1671,10 +1665,13 @@
   }
 
   // ---------------- Conceito -> nota (0 a 10) ----------------
+  // O epsilon corrige o erro de ponto flutuante dos pesos decimais: sem ele,
+  // (1 + 0,7 + 0,7 + 0,3) / 4 x 10 = 6,75 dava 6,7499999... e virava 6,5.
   function arredondarNota(n, modo){
-    if(modo === "1") return Math.round(n);
-    if(modo === "0.1") return Math.round(n*10)/10;
-    return Math.round(n*2)/2; // meio ponto
+    const EPS = 1e-9;
+    if(modo === "1") return Math.round(n + EPS);
+    if(modo === "0.1") return Math.round(n*10 + EPS)/10;
+    return Math.round(n*2 + EPS)/2; // meio ponto
   }
 
   // Denominador = so o que ja foi lancado (inclui EP automatico de atividade
@@ -2423,6 +2420,7 @@
       bdata.records = {};
       bdata.notes = {};
       bdata.grades = {};
+      delete bdata.fechadoEm;
       state.dataCache[`${t.id}:${state.bim}`] = bdata;
       scheduleSaveBimData(t.id, state.bim);
       renderPanel();
@@ -2536,6 +2534,7 @@
         atualizadoresDeLinha.forEach(fn=>fn());
         atualizarRodape();
         atualizarEstatisticas();
+        atualizarContadorPendencias();
         showToast(`Turma inteira marcada como ${concept} em "${act.name}".`);
         return;
       }
@@ -2559,7 +2558,7 @@
       const aVencer = !!(act.date && act.date > today);
       th.className = "act-th" + (aVencer ? " a-vencer" : "");
       th.innerHTML = `<span class="act-name">${escapeHtml(act.name)}</span>` +
-        `<span class="act-date">${formatDate(act.date)}${aVencer ? " · a vencer" : ""}</span>` +
+        `<span class="act-date">${escapeHtml(formatDate(act.date))}${aVencer ? " · a vencer" : ""}</span>` +
         (act.ae
           ? `<span class="ae-chip" title="${escapeHtml(descricaoAE(t, state.bim, act.ae))}">${escapeHtml(act.ae)}</span>`
           : `<span class="ae-chip vazio" title="Esta atividade ainda não está vinculada a uma ${escapeHtml(rotuloAE(t).toLowerCase())}. Vincule em &quot;Gerenciar turma&quot;.">sem ${escapeHtml(rotuloAECurto(t))}</span>`);
@@ -2661,6 +2660,7 @@
           atualizarLinha.fn();
           atualizarRodape();
           atualizarEstatisticas();
+          atualizarContadorPendencias();
         };
         td.appendChild(btn);
         tr.appendChild(td);
@@ -4411,7 +4411,8 @@
     rows.forEach(r=>{
       const total = r.totals.ET + r.totals.ES + r.totals.EP;
       const pct = total > 0 ? Math.round((r.totals.ET/total)*100) + "%" : "—";
-      grand.alunos += r.roster.length;
+      const ativos = alunosAtivos(r.roster).length;
+      grand.alunos += ativos;
       grand.ET += r.totals.ET; grand.ES += r.totals.ES; grand.EP += r.totals.EP;
       grand.risco += r.emRisco; grand.queda += r.emQueda;
       const atencao = (r.emRisco + r.emQueda) === 0 ? "—" : `${r.emRisco} · ${r.emQueda}`;
@@ -4426,7 +4427,7 @@
       tr.innerHTML = `
         <td class="turma-cell"><span class="caret${isOpen ? " open" : ""}">▶</span>${r.t.turma}</td>
         <td>${r.t.disc}</td>
-        <td class="num">${r.roster.length}</td>
+        <td class="num">${ativos}</td>
         <td class="num">${r.totals.ET}</td>
         <td class="num">${r.totals.ES}</td>
         <td class="num">${r.totals.EP}</td>
@@ -4650,7 +4651,14 @@
         // checagem, uma lista que não seja array quebrava a tela depois.
         const bruto = payload.rosters[tid];
         const list = Array.isArray(bruto)
-          ? bruto.filter(st=>st && typeof st === "object" && st.id).map(st=>({id:String(st.id), name:String(st.name == null ? "" : st.name)}))
+          ? bruto.filter(st=>st && typeof st === "object" && st.id).map(st=>{
+              const limpo = {id:String(st.id), name:String(st.name == null ? "" : st.name)};
+              // Sem isto, importar (ou carregar do arquivo sincronizado) apagava o
+              // número de chamada e devolvia os transferidos para a grade.
+              if(st.num != null && st.num !== "") limpo.num = String(st.num);
+              if(st.inativo) limpo.inativo = true;
+              return limpo;
+            })
           : [];
         if(!Array.isArray(bruto) && bruto != null) ignorados++;
         state.rosterCache[tid] = list;
@@ -4664,7 +4672,12 @@
         const bruto = payload.bimdata[key];
         const bd = (bruto && typeof bruto === "object" && !Array.isArray(bruto)) ? bruto : {};
         if(bd !== bruto && bruto != null) ignorados++;
-        bd.activities = Array.isArray(bd.activities) ? bd.activities.filter(a=>a && typeof a === "object" && a.id) : [];
+        bd.activities = Array.isArray(bd.activities) ? bd.activities.filter(a=>a && typeof a === "object" && a.id).map(a=>Object.assign(a, {
+          id: String(a.id),
+          name: String(a.name == null ? "" : a.name),
+          date: (typeof a.date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(a.date)) ? a.date : "",
+          ae: typeof a.ae === "string" ? a.ae : ""
+        })) : [];
         bd.records = (bd.records && typeof bd.records === "object" && !Array.isArray(bd.records)) ? bd.records : {};
         bd.notes = (bd.notes && typeof bd.notes === "object" && !Array.isArray(bd.notes)) ? bd.notes : {};
         bd.grades = (bd.grades && typeof bd.grades === "object" && !Array.isArray(bd.grades)) ? bd.grades : {};
