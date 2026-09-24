@@ -1,0 +1,2467 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Painel Sala 10</title>
+<meta name="theme-color" content="#F1F2F7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#131312" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+:root{
+  --ground:#F1F2F7;
+  --surface:#FFFFFF;
+  --surface-2:#E8EAF3;
+  --hair:#D5D8E5;
+  --hair-soft:#E3E5EF;
+  --ink:#14161F;
+  --ink-2:#333949;
+  --muted:#5F677C;
+  --accent:#3D48B4;
+  --accent-ink:#2C3696;
+  --accent-soft:#E1E4F8;
+  --slate:#43596D;
+  --slate-soft:#DFE7EE;
+  --urgent:#A03318;
+  --urgent-soft:#F7E4DC;
+  --warn:#78560A;
+  --ok:#2C6E4C;
+  --past:#DEE0EA;
+  --p1:#B3341C;
+  --p2:#A96208;
+  --p3:#1D6B87;
+  --p4:#D5D8E5;
+  --shadow:0 1px 2px rgba(20,22,31,.04), 0 18px 40px -30px rgba(20,22,31,.5);
+  --r-lg:16px;
+  --r:9px;
+  --r-sm:6px;
+  --tcol:50px;
+  --mono:"IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --sans:"Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --display:"Bricolage Grotesque", "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#131312; --surface:#1C1C1A; --surface-2:#252523;
+    --hair:#2E2D2A; --hair-soft:#262523;
+    --ink:#EDEBE6; --ink-2:#CFCBC3; --muted:#A19E96;
+    --accent:#8D9CF7; --accent-ink:#B3BEFB; --accent-soft:#1D2140;
+    --slate:#B2C0CC; --slate-soft:#232829;
+    --urgent:#F2917A; --urgent-soft:#35211C; --warn:#DFB35A; --ok:#68BE8E;
+    --past:#21211F;
+    --p1:#EF8163; --p2:#DFA24C; --p3:#6FC8E0; --p4:#3A3935;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 20px 46px -32px rgba(0,0,0,.95);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#131312; --surface:#1C1C1A; --surface-2:#252523;
+  --hair:#2E2D2A; --hair-soft:#262523;
+  --ink:#EDEBE6; --ink-2:#CFCBC3; --muted:#A19E96;
+  --accent:#8D9CF7; --accent-ink:#B3BEFB; --accent-soft:#1D2140;
+  --slate:#B2C0CC; --slate-soft:#232829;
+  --urgent:#F2917A; --urgent-soft:#35211C; --warn:#DFB35A; --ok:#68BE8E;
+  --past:#21211F;
+  --p1:#EF8163; --p2:#DFA24C; --p3:#6FC8E0; --p4:#3A3935;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 20px 46px -32px rgba(0,0,0,.95);
+}
+
+*{box-sizing:border-box}
+[hidden]{display:none !important}
+body{
+  background:var(--ground);color:var(--ink);font-family:var(--sans);
+  font-size:15px;line-height:1.5;margin:0;padding:clamp(16px,2.4vw,32px);
+  /* celular desenha sob as barras do sistema quando o viewport é viewport-fit=cover */
+  padding-top:calc(clamp(16px,2.4vw,32px) + env(safe-area-inset-top,0px));
+  padding-bottom:calc(clamp(16px,2.4vw,32px) + env(safe-area-inset-bottom,0px));
+  -webkit-font-smoothing:antialiased;
+  -webkit-text-size-adjust:100%;text-size-adjust:100%;
+  -webkit-tap-highlight-color:transparent;
+}
+.wrap{max-width:1160px;margin:0 auto;display:flex;flex-direction:column;gap:24px}
+button{font:inherit;color:inherit;cursor:pointer;background:none;border:0}
+a{color:var(--accent-ink);text-decoration:none}
+a:hover{color:var(--accent)}
+:where(a,button,[tabindex]):focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:var(--r-sm)}
+
+/* ---------- cabeçalho ---------- */
+.masthead{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;flex-direction:column;gap:2px;min-width:0}
+.eyebrow{
+  font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);display:flex;align-items:center;gap:7px;margin:0;
+}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--muted);flex:none}
+.dot.live{background:var(--ok)}
+.dot.warn{background:var(--warn)}
+.dot.down{background:var(--urgent)}
+h1{
+  font-family:var(--display);font-weight:700;font-size:clamp(28px,3.7vw,38px);
+  line-height:1.02;letter-spacing:-.03em;margin:0;text-wrap:balance;
+}
+.subtitle{color:var(--muted);font-size:14px;margin:0}
+.eyebrow.top{font-size:12px;letter-spacing:.1em;color:var(--ink-2);font-weight:500}
+.eyebrow.top .sep{opacity:.45}
+.subtitle.status{font-family:var(--mono);font-size:11px;letter-spacing:.04em;padding-left:13px}
+/* todos os números do painel em largura fixa: colunas de hora alinhadas */
+.count,.pill b,.chip .n,.seg,.axis i,.tl .time,.day-item .time,.stamp-global,.wx-inline b,.row-meta,.rail-where .mono{
+  font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1;
+}
+.masthead-right{display:flex;align-items:flex-end;gap:12px 20px;flex-wrap:wrap;min-width:0;max-width:100%}
+.meter{display:flex;flex-direction:column;align-items:flex-end;gap:1px;flex:none}
+#weather-host{min-width:0;max-width:100%;flex:1 1 260px}
+.wx-inline{display:block;font-size:13px;line-height:1.5;color:var(--muted);margin:0;min-width:0;max-width:100%;overflow-wrap:anywhere}
+.wx-inline b{white-space:nowrap}
+.wx-inline b{font-family:var(--mono);font-size:14px;font-weight:600;color:var(--ink-2);letter-spacing:-.02em}
+.clock{
+  font-family:var(--mono);font-size:clamp(26px,3.4vw,36px);font-weight:600;letter-spacing:-.03em;line-height:1.1;
+  font-variant-numeric:tabular-nums;color:var(--ink);margin:0;
+}
+.tools{display:flex;align-items:center;gap:8px}
+.stamp-global{font-family:var(--mono);font-size:10.5px;color:var(--muted);letter-spacing:.04em;white-space:nowrap}
+.btn{
+  min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;
+  border-radius:var(--r);background:var(--surface);box-shadow:var(--shadow);
+  color:var(--ink-2);transition:color .15s;
+}
+.btn:hover{color:var(--accent-ink)}
+.btn:disabled{color:var(--hair);cursor:default}
+.btn svg{width:17px;height:17px}
+
+/* ---------- régua do dia ---------- */
+.rail{
+  background:var(--surface);border:1px solid var(--hair);border-radius:var(--r-lg);
+  box-shadow:var(--shadow);padding:24px;display:flex;flex-direction:column;gap:24px;
+}
+.rail-top{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.rail-next{display:flex;flex-direction:column;gap:4px;min-width:0}
+.rail-eyebrow{
+  margin:0;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent-ink);font-weight:600;
+}
+.rail-eyebrow .sep{opacity:.4;font-weight:400}
+.rail-eyebrow.is-now{color:var(--urgent)}
+.rail-what{
+  font-family:var(--display);font-weight:700;font-size:clamp(30px,5vw,48px);
+  line-height:1;letter-spacing:-.035em;margin:0;text-wrap:balance;
+  min-width:0;overflow-wrap:anywhere;
+}
+.rail-where{margin:0;font-size:15px;color:var(--muted);overflow-wrap:anywhere}
+.rail-what a{color:inherit}
+.rail-what a:hover{color:var(--accent-ink)}
+.rail-where .mono{font-family:var(--mono);font-size:13px;color:var(--ink-2)}
+
+/* pílulas: são BOTÕES e aplicam o filtro correspondente */
+.pills{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding-top:4px}
+.pill{
+  display:inline-flex;align-items:baseline;gap:7px;min-height:44px;padding:8px 16px;
+  border-radius:999px;background:var(--surface-2);color:var(--ink-2);font-size:13px;
+  transition:background .15s,color .15s;
+}
+.pill b{font-family:var(--mono);font-size:14px;font-weight:600;font-variant-numeric:tabular-nums}
+.pill:hover{background:var(--accent-soft);color:var(--accent-ink)}
+.pill.is-urgent{background:var(--urgent-soft);color:var(--urgent)}
+.pill.is-urgent:hover{filter:brightness(.97)}
+
+.track-wrap{display:flex;flex-direction:column;gap:8px}
+.track{position:relative;height:80px;margin-top:26px}
+.track-base{position:absolute;inset:0;border-radius:11px;background:var(--surface-2);overflow:hidden}
+.track-base i{position:absolute;top:0;bottom:0;width:1px;background:var(--hair-soft)}
+.track-shade{position:absolute;top:0;bottom:0;left:0;border-radius:11px 0 0 11px;background:rgba(127,127,127,.07)}
+.seg{
+  position:absolute;top:0;height:80px;border-radius:11px;display:flex;flex-direction:column;
+  justify-content:center;gap:4px;padding:0 10px;overflow:hidden;box-sizing:border-box;
+  border:1px solid transparent;letter-spacing:-.01em;transition:filter .12s;
+}
+.seg.estreito{padding:0 5px}
+.seg:hover{filter:brightness(.96)}
+.seg span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;position:relative}
+/* parte já decorrida do bloco em curso */
+.seg .prog{position:absolute;left:0;top:0;bottom:0;background:currentColor;opacity:.13;pointer-events:none}
+/* vão comprimido: listrado, para a escala não mentir */
+.gapz{position:absolute;top:0;bottom:0;display:flex;align-items:center;justify-content:center;
+  background:repeating-linear-gradient(135deg,var(--hair) 0 1px,transparent 1px 7px);
+  font-family:var(--mono);font-size:10.5px;color:var(--muted);letter-spacing:.02em}
+.gapz b{font-weight:500;background:var(--surface-2);padding:1px 5px;border-radius:4px}
+.seg .h{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:-.02em}
+.seg .t{font-size:13.5px;font-weight:600;line-height:1.15}
+/* segunda linha (disciplina) quando o bloco de 50 min não comporta "turma · disciplina" */
+.seg .t2{font-weight:500;margin-top:-3px}
+.seg.now{border-color:var(--urgent);box-shadow:0 0 0 3px color-mix(in srgb,var(--urgent) 18%,transparent)}
+.seg.aula{background:var(--slate-soft);color:var(--slate)}
+.seg.fora{background:var(--accent);color:var(--surface)}
+/* passado recua por COR, nunca por opacity (contraste) */
+.seg.past{background:var(--past);color:var(--muted)}
+.nowline{position:absolute;top:-6px;bottom:-6px;width:2px;background:var(--urgent);border-radius:2px;box-shadow:0 0 0 3px color-mix(in srgb,var(--urgent) 16%,transparent);pointer-events:none}
+.nowpin{
+  position:absolute;top:-26px;transform:translateX(-50%);white-space:nowrap;
+  font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.02em;
+  color:var(--surface);background:var(--urgent);padding:2px 7px;border-radius:5px;
+}
+.axis{position:relative;height:18px}
+.axis i{
+  position:absolute;top:0;font-family:var(--mono);font-size:11px;font-style:normal;
+  color:color-mix(in srgb,var(--muted) 72%,var(--surface));letter-spacing:.03em;transform:translateX(-50%);
+}
+.axis i.now{color:var(--urgent);font-weight:600}
+.legend{display:flex;gap:16px;flex-wrap:wrap;align-items:center;font-size:12px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend .sw{width:11px;height:11px;border-radius:3px;flex:none}
+.legend .sw.aula{background:var(--slate-soft);box-shadow:inset 0 0 0 1px var(--slate)}
+.legend .sw.fora{background:var(--accent)}
+/* a MESMA listra do vão comprimido na régua. Era um quadrado chapado em --past,
+   que é a cor de "aula que já passou" — dois sentidos para o mesmo cinza. */
+.legend .sw.gap{
+  background:repeating-linear-gradient(135deg,var(--hair) 0 1px,transparent 1px 7px),var(--surface-2);
+  box-shadow:inset 0 0 0 1px var(--hair-soft);
+}
+
+/* ---------- tabuleiro ---------- */
+.board{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));
+  gap:24px;align-items:start;
+}
+/* a agenda é o que se lê de longe: mais largura que a coluna de ação */
+@media (min-width:1100px){
+  .board{grid-template-columns:minmax(0,1.24fr) minmax(0,1fr)}
+}
+.col{display:flex;flex-direction:column;gap:24px;min-width:0}
+
+/* cabeçalho de seção: MESMA tipografia nas duas colunas (sans, não display) */
+.sec-head, .card-head{
+  display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+}
+.sec-head{padding:0 2px 8px;border-bottom:1px solid var(--hair)}
+.card-head{padding:16px 16px 0}
+.sec-head h2, .card-head h2{
+  font-family:var(--sans);font-weight:600;font-size:12px;letter-spacing:.09em;
+  text-transform:uppercase;margin:0;color:var(--ink);
+}
+.count{font-family:var(--mono);font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+
+/* coluna de leitura: assenta no fundo */
+.sec{display:flex;flex-direction:column;min-width:0}
+.tl{list-style:none;margin:0;padding:8px 0 0;display:flex;flex-direction:column}
+.tl li + li{box-shadow:inset 0 1px 0 var(--hair-soft)}
+.tl a{
+  display:flex;gap:16px;align-items:flex-start;color:var(--ink);
+  padding:10px 8px;border-radius:var(--r);transition:background .12s;
+}
+.tl a:hover{background:var(--surface)}
+.tl .time{
+  font-family:var(--mono);font-size:12.5px;letter-spacing:-.02em;
+  color:var(--ink-2);flex:none;min-width:var(--tcol);padding-top:1px;
+}
+.tl .body{min-width:0;flex:1;display:flex;flex-direction:column;gap:2px}
+.tl .title{font-size:14px;line-height:1.4;overflow-wrap:anywhere}
+.tl .meta{font-size:12px;color:var(--muted)}
+.tl .meta .fora{color:var(--accent-ink)}
+.tl li.past a, .tl li.past .time, .tl li.past .meta{color:var(--muted)}
+.tl li.now a{background:var(--urgent-soft);color:var(--urgent)}
+.tl li.now .time{color:var(--urgent);font-weight:600}
+.tl li.now .title{font-weight:600}
+.tl li.now .meta{color:var(--urgent)}
+.nowdiv{display:flex;align-items:center;gap:9px;padding:8px 0 8px 2px;box-shadow:none !important}
+.nowdiv b{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--urgent);font-weight:600;
+}
+.nowdiv i{flex:1;height:1px;background:var(--urgent);opacity:.3}
+
+.days{display:flex;flex-direction:column;padding-top:8px}
+.day{padding:12px 2px;display:flex;flex-direction:column;gap:6px}
+.day + .day{box-shadow:inset 0 1px 0 var(--hair-soft)}
+.day-head{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
+.day-head b{font-size:13px;font-weight:600}
+.day-item{display:flex;gap:12px;color:var(--ink);font-size:14px;align-items:baseline;min-width:0}
+.day-item .t{min-width:0;overflow-wrap:anywhere}
+.day-item .time{font-family:var(--mono);font-size:12.5px;letter-spacing:-.02em;color:var(--muted);min-width:var(--tcol);flex:none}
+.day-item:hover{color:var(--accent-ink)}
+.day-quiet{font-size:13px;color:var(--muted);margin:0}
+
+/* coluna de ação: cartão com fio de 1px, SEM sombra (só a régua tem sombra) */
+.card{
+  background:var(--surface);border:1px solid var(--hair);border-radius:var(--r-lg);
+  overflow:hidden;display:flex;flex-direction:column;
+}
+/* foco sempre visível: hover não existe em toque nem no teclado */
+a:focus-visible, button:focus-visible{
+  outline:2px solid var(--accent);outline-offset:2px;border-radius:var(--r-sm);
+}
+.check:focus-visible, .snooze:focus-visible, .chip:focus-visible{outline-offset:-2px;border-radius:999px}
+.seg:focus-visible{outline-offset:1px;border-radius:11px}
+
+.chips{display:flex;gap:4px;padding:8px 12px 0;flex-wrap:wrap}
+.chip{
+  min-height:44px;padding:6px 14px;border-radius:999px;font-size:13px;font-weight:500;
+  color:var(--muted);transition:background .15s,color .15s;
+}
+.chip:hover{background:var(--surface-2);color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent-ink);font-weight:600}
+.chip .n{font-family:var(--mono);font-size:11.5px;opacity:.75;margin-left:5px}
+
+.list{list-style:none;margin:0;padding:4px 0 8px;display:flex;flex-direction:column}
+/* agrupar por prazo tira a data de cada linha e o fio entre todas elas */
+.grp{display:flex;flex-direction:column}
+.grp + .grp{border-top:1px solid var(--hair-soft);margin-top:4px;padding-top:2px}
+.grp-head{display:flex;align-items:baseline;gap:8px;padding:10px 16px 2px}
+.grp-head b{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+  font-weight:600;color:var(--muted);
+}
+.grp-head b.late{color:var(--urgent)}
+.grp-head .n{font-family:var(--mono);font-size:10.5px;color:var(--muted)}
+.row.tight{align-items:center;padding:0 12px 0 8px}
+.row.tight + .row.tight{box-shadow:none}
+.row.tight .row-main{flex-direction:row;align-items:baseline;gap:10px;flex-wrap:wrap;padding:8px 4px}
+.row.tight .row-when{font-family:var(--mono);font-size:11.5px;color:var(--muted);white-space:nowrap}
+.row.tight.done .row-when{text-decoration:none}
+.row.tight .row-when.late{color:var(--urgent);font-weight:600}
+.row{display:flex;gap:4px;align-items:flex-start;padding:2px 12px 2px 8px}
+.row + .row{box-shadow:inset 0 1px 0 var(--hair-soft)}
+/* ordem no DOM: título ANTES das ações (varredura por teclado = leitura);
+   order:-1 devolve o círculo para a esquerda visualmente */
+.row-main{
+  min-width:0;flex:1;display:flex;flex-direction:column;gap:3px;color:inherit;
+  padding:11px 4px;border-radius:var(--r);transition:background .12s;
+}
+.row-main:hover{background:var(--surface-2)}
+.row-title{font-size:14px;line-height:1.4;overflow-wrap:anywhere;color:var(--ink)}
+.row-meta{font-size:12px;color:var(--muted);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.row-meta .sep{opacity:.45}
+.unread .row-title{font-weight:600}
+
+/* alvo de 44px com anel visual de 19px dentro */
+.check{
+  order:-1;flex:none;width:44px;height:44px;display:inline-flex;align-items:center;
+  justify-content:center;border-radius:50%;color:var(--muted);
+}
+.check i{
+  width:19px;height:19px;border-radius:50%;border:2px solid var(--p4);
+  display:inline-flex;align-items:center;justify-content:center;color:transparent;
+  transition:background .15s,color .15s,border-color .15s;
+}
+.check svg{width:11px;height:11px;display:block}
+.check.p1 i{border-color:var(--p1)}
+.check.p2 i{border-color:var(--p2)}
+.check.p3 i{border-color:var(--p3)}
+.check.p4 i{border-color:var(--p4);border-width:1.5px}
+.check:hover i{color:var(--accent);border-color:var(--accent)}
+/* adiar SEMPRE visível (não existe hover em toque) */
+.snooze{
+  flex:none;width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;
+  border-radius:var(--r);color:var(--muted);transition:color .15s,background .15s;
+}
+.snooze:hover{color:var(--accent-ink);background:var(--surface-2)}
+.snooze svg{width:15px;height:15px;display:block}
+.row.done .check i{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.row.done .row-title{text-decoration:line-through;color:var(--muted)}
+.row.moved .row-title{color:var(--muted)}
+.row.done .row-title, .row.moved .row-title{font-weight:400}
+.tag{
+  font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;
+  border-radius:4px;padding:2px 6px;background:var(--surface-2);color:var(--muted);font-weight:600;
+}
+.tag.late{background:var(--urgent-soft);color:var(--urgent)}
+.tag.today{background:var(--accent-soft);color:var(--accent-ink)}
+.empty{padding:14px 20px 18px;font-size:13.5px;color:var(--muted);display:flex;flex-direction:column;align-items:flex-start;gap:10px}
+.empty-act{
+  display:inline-flex;align-items:center;min-height:36px;padding:7px 14px;border-radius:8px;
+  background:var(--surface-2);color:var(--ink);font-size:12.5px;font-weight:600;
+}
+.empty-act:hover{background:var(--accent-soft);color:var(--accent-ink)}
+
+/* desfazer ancorado no PÉ do cartão: não desloca a lista */
+.undobar{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:11px 16px;
+  background:var(--accent-soft);font-size:13px;color:var(--accent-ink);
+  border-top:1px solid var(--hair);
+}
+.undobar .t{flex:1;min-width:0}
+.undobar button{
+  min-height:36px;padding:6px 14px;border-radius:8px;background:var(--surface);
+  font-size:12.5px;font-weight:600;color:var(--accent-ink);
+}
+
+/* ---------- rodapé ---------- */
+.footer{
+  display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;justify-content:space-between;
+  padding-top:16px;border-top:1px solid var(--hair);font-size:12px;color:var(--muted);
+}
+.legend-keys{display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+.key{display:inline-flex;align-items:center;gap:8px}
+.key i{
+  width:19px;height:19px;border-radius:50%;border:1.5px solid var(--hair);flex:none;
+  display:inline-flex;align-items:center;justify-content:center;color:var(--muted);
+}
+.key i.sq{border-radius:var(--r-sm);border-color:transparent;background:var(--surface-2)}
+.key i.pr{width:13px;height:13px;border-width:2px}
+.key i.pr.p1{border-color:var(--p1)}
+.key i.pr.p2{border-color:var(--p2)}
+.key i.pr.p3{border-color:var(--p3)}
+.key i svg{width:11px;height:11px}
+.foot-notes{display:flex;flex-direction:column;gap:3px;align-items:flex-end;text-align:right}
+.foot-notes span{font-family:var(--mono);font-size:11px;letter-spacing:.04em}
+.foot-notes .warn{color:var(--warn)}
+
+@media (prefers-reduced-motion: reduce){
+  *{transition-duration:.01ms !important;animation-duration:.01ms !important}
+}
+@media print{
+  :root{--ground:#fff;--surface:#fff;--shadow:none}
+  [data-noprint]{display:none !important}
+  .rail,.card,.sec{break-inside:avoid}
+  body{font-size:11pt;padding:0}
+}
+
+/* ---------- clima: linha no cabeçalho + seletor de cidade ---------- */
+.wx-inline .wx-city{
+  font-size:12px;color:var(--muted);border-radius:var(--r-sm);padding:2px 5px;
+  transition:color .15s,background .15s;
+}
+.wx-inline .wx-city:hover{color:var(--accent-ink);background:var(--surface-2)}
+.wx-ico{width:16px;height:16px;vertical-align:-3px;margin-right:6px}
+.wx-inline .wx-alert{color:var(--urgent);font-weight:600}
+.wx-pick{
+  display:flex;flex-direction:column;gap:6px;min-width:250px;
+  background:var(--surface);border:1px solid var(--hair);border-radius:var(--r);
+  padding:10px 12px;box-shadow:var(--shadow);
+}
+.wx-pick .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.wx-form{display:flex;gap:6px}
+.wx-form input{
+  flex:1;min-width:0;font:inherit;font-size:13px;padding:7px 9px;
+  border:1px solid var(--hair);border-radius:var(--r-sm);background:var(--ground);color:var(--ink);
+}
+.wx-form button{
+  font-size:12.5px;padding:7px 12px;flex:none;border-radius:var(--r-sm);
+  background:var(--surface-2);color:var(--ink-2);
+}
+.wx-form button:hover{color:var(--accent-ink)}
+.wx-hits{display:flex;flex-direction:column;gap:1px}
+.wx-hit{text-align:left;padding:7px 8px;border-radius:var(--r-sm);font-size:13px;color:var(--ink-2)}
+.wx-hit:hover{background:var(--surface-2);color:var(--accent-ink)}
+
+/* ---------- estados: carregando, vazio, erro, dados velhos ---------- */
+.skel{padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.skel i{display:block;height:11px;border-radius:4px;background:var(--surface-2)}
+.skel i:nth-child(2){width:72%}
+.skel i:nth-child(3){width:54%}
+.state{padding:16px;display:flex;flex-direction:column;gap:6px}
+.state p{margin:0;font-size:13px;color:var(--muted);line-height:1.5}
+.state strong{color:var(--ink);font-weight:600;font-size:13.5px}
+.state.err{border-left:3px solid var(--urgent);background:var(--urgent-soft)}
+.state.err strong{color:var(--urgent)}
+.state.err p{color:var(--ink-2)}
+.state.warnbox{border-left:3px solid var(--warn);background:var(--surface-2)}
+.state.warnbox strong{color:var(--warn)}
+.state.warnbox p{color:var(--ink-2)}
+.stale{
+  padding:7px 16px;font-family:var(--mono);font-size:11px;color:var(--warn);
+  background:var(--surface-2);letter-spacing:.02em;
+}
+.row-err{
+  padding:8px 16px 10px 56px;font-size:12px;line-height:1.45;color:var(--urgent);
+  background:var(--urgent-soft);list-style:none;
+}
+
+/* ---------- aviso de página inteira ---------- */
+.pagealert{
+  display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap;
+  padding:14px 16px;border:1px solid var(--hair);border-left:3px solid var(--urgent);
+  border-radius:var(--r-lg);background:var(--urgent-soft);
+}
+.pa-txt{flex:1;min-width:220px;display:flex;flex-direction:column;gap:3px}
+.pa-txt strong{color:var(--urgent);font-size:13.5px;font-weight:600}
+.pa-txt p{margin:0;font-size:13px;color:var(--ink-2);line-height:1.5}
+.pa-code{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.03em;overflow-wrap:anywhere}
+.pagealert .btn{flex:none;padding:0 16px;font-size:13px;font-weight:500;width:auto}
+
+/* ---------- diagnóstico ---------- */
+.diagbox{width:100%;margin-top:4px}
+.diagbox summary{cursor:pointer;color:var(--muted);font-family:var(--mono);font-size:11px;letter-spacing:.06em}
+.diagbox summary:hover{color:var(--accent-ink)}
+.diagtab{
+  margin-top:8px;padding:10px 12px;background:var(--surface);border:1px solid var(--hair);
+  border-radius:var(--r);font-family:var(--mono);font-size:11px;line-height:1.7;color:var(--ink-2);
+  white-space:pre-wrap;word-break:break-word;letter-spacing:0;
+}
+.spin{animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){ .spin{animation:none} }
+@media (max-width:640px){
+  .rail{padding:16px;gap:18px}
+  .masthead-right{width:100%;justify-content:space-between;align-items:center}
+  .meter{align-items:flex-start}
+  #weather-host{order:3;flex-basis:100%}
+  .wx-form input{font-size:16px}          /* abaixo de 16px o iOS dá zoom ao focar */
+  .wx-pick{min-width:0;width:100%}
+  .foot-notes{align-items:flex-start;text-align:left}
+  .footer{flex-direction:column;align-items:flex-start}
+  .card-head{padding:14px 14px 0}
+  .chips{padding:8px 8px 0}
+  .row{padding-right:6px}
+}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="brand">
+      <h1 class="sr">Painel Sala 10</h1>
+      <p class="eyebrow top"><span class="dot" id="live-dot"></span><span>Sala 10</span><span class="sep">·</span><span id="today-label">—</span></p>
+      <p class="subtitle status" id="live-label">conectando…</p>
+    </div>
+    <div class="masthead-right">
+      <div id="weather-host" aria-live="polite"></div>
+      <div class="meter">
+        <p class="clock" id="clock">--:--</p>
+        <span class="stamp-global" id="stamp-global" data-noprint></span>
+      </div>
+      <div class="tools" data-noprint>
+        <button class="btn" type="button" id="refresh-btn" title="Atualizar tudo" aria-label="Atualizar tudo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><polyline points="21 3 21 9 15 9"/></svg></button>
+        <button class="btn" type="button" id="theme-btn" title="Alternar tema" aria-label="Alternar tema"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+      </div>
+    </div>
+  </header>
+
+  <div id="pagealert" hidden></div>
+
+  <section class="rail" aria-label="Régua do dia">
+    <div class="rail-top">
+      <div class="rail-next" id="rail-next" aria-live="polite"></div>
+      <div class="pills" id="pills" data-noprint></div>
+    </div>
+    <div class="track-wrap">
+      <div class="track" id="track"></div>
+      <div class="axis" id="axis"></div>
+      <div class="legend">
+        <span><i class="sw aula"></i> aula da grade</span>
+        <span><i class="sw fora"></i> fora da grade</span>
+        <span style="color:var(--urgent)"><i class="sw" style="width:2px;height:12px;border-radius:2px;background:var(--urgent)"></i> agora</span>
+        <span id="legend-gap" hidden><i class="sw gap"></i> intervalos longos comprimidos</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="board">
+
+    <div class="col">
+      <section class="sec">
+        <div class="sec-head"><h2>Hoje</h2><span class="count" id="agenda-count"></span></div>
+        <div id="agenda-body"><div class="skel"><i></i><i></i><i></i></div></div>
+      </section>
+
+      <section class="sec">
+        <div class="sec-head"><h2>Próximos dias</h2><span class="count" id="prox-count"></span></div>
+        <div id="prox-body"><div class="skel"><i></i><i></i></div></div>
+      </section>
+    </div>
+
+    <div class="col">
+      <section class="card" id="tarefas">
+        <div class="card-head"><h2>Tarefas</h2><span class="count" id="tarefas-count"></span></div>
+        <div class="chips" id="tarefas-chips" role="group" aria-label="Filtrar tarefas" data-noprint>
+          <button class="chip" type="button" data-filter="atrasadas" aria-pressed="false">Atrasadas <span class="n"></span></button>
+          <button class="chip" type="button" data-filter="hoje" aria-pressed="true">Hoje <span class="n"></span></button>
+          <button class="chip" type="button" data-filter="semana" aria-pressed="false">7 dias <span class="n"></span></button>
+        </div>
+        <div id="tarefas-body"><div class="skel"><i></i><i></i><i></i></div></div>
+      </section>
+
+      <section class="card" id="email">
+        <div class="card-head"><h2>E-mail</h2><span class="count" id="email-count"></span></div>
+        <div class="chips" id="email-chips" role="group" aria-label="Filtrar e-mails" data-noprint>
+          <button class="chip" type="button" data-mail="pri" aria-pressed="true">Esperando você <span class="n"></span></button>
+          <button class="chip" type="button" data-mail="alunos" aria-pressed="false">Alunos <span class="n"></span></button>
+          <button class="chip" type="button" data-mail="tudo" aria-pressed="false">Tudo não lido <span class="n"></span></button>
+        </div>
+        <div id="email-body"><div class="skel"><i></i><i></i><i></i></div></div>
+      </section>
+
+      <section class="card" id="drive">
+        <div class="card-head"><h2>Drive recente</h2><span class="count" id="drive-count"></span></div>
+        <div id="drive-body"><div class="skel"><i></i><i></i><i></i></div></div>
+      </section>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="legend-keys">
+      <span class="key"><i class="pr p1"></i> P1 <i class="pr p2"></i> P2 <i class="pr p3"></i> P3</span>
+      <span>concluir e adiar dão para desfazer por 25 s</span>
+    </div>
+    <div class="foot-notes">
+      <span id="foot-boot"></span>
+      <span>o clima é da cidade escolhida, não do GPS</span>
+      <details class="diagbox" id="diagbox">
+        <summary>diagnóstico</summary>
+        <div class="diagtab" id="diagtab">—</div>
+      </details>
+    </div>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var TZ = "America/Sao_Paulo";
+  var OFF = "-03:00"; // São Paulo não usa horário de verão desde 2019
+
+  var fTime  = new Intl.DateTimeFormat("pt-BR",{hour:"2-digit",minute:"2-digit",timeZone:TZ});
+  var fDay   = new Intl.DateTimeFormat("pt-BR",{weekday:"long",day:"numeric",month:"long",timeZone:TZ});
+  var fShort = new Intl.DateTimeFormat("pt-BR",{weekday:"short",day:"2-digit",month:"2-digit",timeZone:TZ});
+  var fISO   = new Intl.DateTimeFormat("en-CA",{year:"numeric",month:"2-digit",day:"2-digit",timeZone:TZ});
+  var fDM    = new Intl.DateTimeFormat("pt-BR",{day:"2-digit",month:"2-digit",timeZone:TZ});
+
+  function isoOf(d){ return fISO.format(d); }
+  function addDays(iso,n){ var d=new Date(iso+"T12:00:00"+OFF); d.setDate(d.getDate()+n); return isoOf(d); }
+  function cap(s){ return s ? s.charAt(0).toUpperCase()+s.slice(1) : s; }
+  // innerHTML escapa & < >, mas não aspas — e esta função também é usada dentro de
+  // atributos (title, aria-label, href). Sem isto, um assunto com " quebra o atributo.
+  function esc(s){
+    var d=document.createElement("div"); d.textContent=s==null?"":String(s);
+    return d.innerHTML.replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+  }
+  function el(id){ return document.getElementById(id); }
+
+  var TODAY = isoOf(new Date());
+  var WEEK_END = addDays(TODAY,7);
+
+  el("today-label").textContent = cap(fDay.format(new Date()));
+
+  function tick(){
+    el("clock").textContent = fTime.format(new Date());
+    if(isoOf(new Date()) !== TODAY) rollDay();
+  }
+  tick(); setInterval(tick, 1000);
+  setInterval(function(){
+    safe("agenda", renderAgenda, "agenda-body");
+    safe("regua",  renderRail);
+    safe("faixa",  renderBand);
+  }, 30000);
+
+  // a régua escolhe rótulos pela largura real: refaz ao redimensionar
+  var reguaTimer = null;
+  window.addEventListener("resize", function(){
+    clearTimeout(reguaTimer);
+    reguaTimer = setTimeout(function(){ safe("regua", renderRail); }, 150);
+  });
+
+  /* ---------------- estado ---------------- */
+  var S = {
+    agenda:  {srv:"Google Agenda", status:"loading", data:null, err:null, at:0},
+    tarefas: {srv:"Todoist",        status:"loading", data:null, err:null, at:0},
+    email:   {srv:"Gmail", tabs:{
+                 pri:     {srv:"Gmail", status:"loading", data:null, err:null, at:0},
+                 alunos:  {srv:"Gmail", status:"loading", data:null, err:null, at:0},
+                 tudo:    {srv:"Gmail", status:"loading", data:null, err:null, at:0}
+               }},
+    drive:   {srv:"Google Drive",   status:"loading", data:null, err:null, at:0},
+    wx:      {srv:"AccuWeather",    status:"loading", data:null, err:null, at:0}
+  };
+  var taskFilter = "hoje";
+  var mailTab = "pri";
+
+  /* ---------------- erros ---------------- */
+  var RETRACT = {needs_reauth:1, server_not_connected:1, blocked_by_policy:1, approval_required:1,
+                 not_in_manifest:1, selection_required:1,
+                 not_granted:1, capability_disabled:1, capability_removed:1};
+
+  function errCopy(e, server){
+    var s = (e && e.server) || server;
+    switch(e && e.code){
+      case "needs_reauth":
+        return {t:"Conexão com "+s+" expirou", p:"Reconecte "+s+" em Configurações → Conectores, no claude.ai, e recarregue esta página.", kind:"err"};
+      case "server_not_connected":
+        return {t:s+" não está conectado", p:"Adicione o conector "+s+" em Configurações → Conectores, no claude.ai, para esta seção funcionar.", kind:"err"};
+      case "selection_required":
+        return {t:"Escolha qual "+s+" usar", p:"Você tem mais de um conector com esse nome. O Claude pergunta qual usar — escolha e recarregue a página.", kind:"warnbox"};
+      case "server_not_found":
+        return {t:s+" não existe mais", p:"O conector foi removido da sua conta. Reconecte-o em Configurações → Conectores.", kind:"err"};
+      case "blocked_by_policy":
+        return {t:"Bloqueado por política", p:"A política da sua organização impede esta página de consultar "+s+".", kind:"err"};
+      case "approval_required":
+        return {t:"Precisa de aprovação", p:"Sua organização exige aprovação a cada consulta a "+s+", e isso ainda não funciona dentro de artefatos.", kind:"err"};
+      case "server_unavailable":
+        return {t:s+" não respondeu", p:"Instabilidade momentânea. A página tenta de novo sozinha em alguns minutos.", kind:"warnbox"};
+      case "rate_limited":
+        return {t:"Muitas consultas seguidas", p:"Aguarde alguns segundos antes de atualizar de novo.", kind:"warnbox"};
+      case "tool_error":
+        return {t:s+" recusou a consulta", p:(e.message||"O conector respondeu com erro."), kind:"err"};
+      case "not_in_manifest":
+        return {t:"Consulta fora da permissão", p:"Esta página não tem autorização para essa chamada em "+s+".", kind:"err"};
+      case "bad_request": case "transform_error":
+        return {t:"Consulta inválida", p:(e.message||"Os parâmetros enviados a "+s+" não foram aceitos."), kind:"err"};
+      case "cancelled":
+        return {t:"Consulta cancelada", p:"A chamada a "+s+" foi interrompida antes de terminar.", kind:"warnbox"};
+      case "sem_resposta":
+        return {t:"O conector não respondeu", p:"A consulta foi registrada, mas nenhuma resposta chegou. Isso é do lado da plataforma, não dos seus dados.", kind:"err"};
+      case "not_granted":
+        return {t:"Sem permissão para usar seus conectores", p:"Feche e abra o painel de novo. Quando o Claude perguntar se esta página pode usar seus conectores, aceite.", kind:"err"};
+      case "capability_disabled": case "capability_removed":
+        return {t:"Conectores desligados nesta visualização", p:"Abra o painel pelo claude.ai, na sua conta. Em pré-visualizações e cópias fora dali os conectores não funcionam.", kind:"err"};
+      default:
+        return {t:"Não deu para carregar "+s, p:(e && e.message) || "Erro inesperado ao falar com o conector.", kind:"err"};
+    }
+  }
+
+  function stateHTML(c){
+    return '<div class="state '+c.kind+'"><strong>'+esc(c.t)+'</strong><p>'+esc(c.p)+'</p></div>';
+  }
+
+  function stampFor(st){
+    if(st.status==="loading") return "carregando…";
+    if(!st.at) return "";
+    return "atualizado "+fTime.format(new Date(st.at));
+  }
+
+  // Um watch pode emudecer sem nunca emitir erro: nesse caso o cartão seguiria
+  // mostrando dado velho com cara de novo. Passado 3x o intervalo da consulta,
+  // a seção se declara parada.
+  var VELHO_FATOR = 3;
+  function estaVelho(st){
+    if(!st || !st.at || !st.every || st.status === "loading") return false;
+    return (Date.now() - st.at) > (st.every * VELHO_FATOR);
+  }
+
+  function staleBar(st){
+    if(st.status==="stale" && st.data){
+      var c = errCopy(st.err, st.srv);
+      return '<div class="stale">dados de '+esc(fTime.format(new Date(st.at)))+' · '+esc(c.t.toLowerCase())+'</div>';
+    }
+    if(st.data && estaVelho(st)){
+      return '<div class="stale">dados de '+esc(fTime.format(new Date(st.at)))
+           + ' · esta seção parou de atualizar sozinha</div>';
+    }
+    return "";
+  }
+
+  /* ---------------- agenda ---------------- */
+  // Data inválida é objeto e passa em teste de verdade, mas explode no Intl.
+  // Tudo que vira Date aqui passa por este filtro.
+  function ok(d){ return (d && typeof d.getTime === "function" && !isNaN(d.getTime())) ? d : null; }
+
+  // Evento de dia inteiro às vezes vem "2026-09-21", às vezes "2026-09-21T00:00:00Z".
+  // Só o dia interessa: o resto seria fuso somado a uma data que não tem hora.
+  function soODia(v){ return String(v).slice(0, 10); }
+
+  function evStart(ev){
+    if(ev.start && ev.start.dateTime) return ok(new Date(ev.start.dateTime));
+    if(ev.start && ev.start.date)     return ok(new Date(soODia(ev.start.date)+"T00:00:00"+OFF));
+    return null;
+  }
+  function evEnd(ev){
+    if(ev.end && ev.end.dateTime) return ok(new Date(ev.end.dateTime));
+    // Em dia inteiro o fim do Google é exclusivo: 21→26 significa até o dia 25.
+    if(ev.end && ev.end.date)     return ok(new Date(addDays(soODia(ev.end.date), -1)+"T23:59:59"+OFF));
+    return null;
+  }
+  function allDay(ev){ return !!(ev.start && ev.start.date && !ev.start.dateTime); }
+
+  function events(){
+    var d = S.agenda.data;
+    var list = (d && d.events) || [];
+    return list.filter(function(e){ return e.status !== "cancelled" && evStart(e); })
+               .sort(function(a,b){ return evStart(a)-evStart(b); });
+  }
+
+  // Aula da grade = ocorrência de um evento recorrente. Compromisso avulso não tem recurringEventId.
+  function isGrade(ev){ return !!ev.recurringEventId; }
+
+  /* ---------------- régua do dia ---------------- */
+  // Minutos desde a meia-noite, lidos no fuso de São Paulo (não no do aparelho).
+  function minOf(d){
+    var t = fTime.format(d);
+    return parseInt(t.slice(0,2),10) * 60 + parseInt(t.slice(3,5),10);
+  }
+
+  // Rótulos do mais longo ao mais curto; a régua usa o primeiro que couber no bloco.
+  // A turma pode vir no começo ("1ºA - Hist.") ou no fim ("Aprof. Filosofia - 3ºD").
+  // Antes só sobrava o pedaço antes do " - ": no aprofundamento isso era a matéria
+  // comprida, que não cabia em 50 min — e o bloco ficava em branco.
+  var RE_TURMA = /\b\d+\s*[ºª°]?\s*[A-Z]\b/;
+  function rotulos(nome){
+    var t = String(nome || "aula").trim();
+    var partes = t.split(/\s[·—–|-]\s/).map(function(p){ return p.trim(); }).filter(Boolean);
+    var out = [t];
+    var achada = t.match(RE_TURMA);
+    if(achada){
+      var turma = achada[0].replace(/\s+/g, "");
+      var disc = partes.filter(function(p){ return !RE_TURMA.test(p); }).join(" ").trim();
+      var palavras = disc.split(/\s+/).filter(Boolean);
+      var ultima = palavras.length ? palavras[palavras.length - 1] : "";
+      var curta = ultima.replace(/\.$/, "").length > 5 ? ultima.slice(0, 4) + "." : ultima;
+      if(ultima) out.push(turma + " · " + ultima);
+      if(curta)  out.push(turma + " · " + curta);
+      out.push(turma);
+    } else if(partes.length){
+      // Não corto no meio de palavra: o CSS resolve com reticências e o title traz o nome inteiro.
+      out.push(partes[0].slice(0, 22));
+    }
+    return out.filter(function(r, i){ return out.indexOf(r) === i; });
+  }
+
+  // Plano B para aula simples (50 min): quando "3ºD · Hist." não cabe numa linha,
+  // a turma vai em cima e a disciplina embaixo — o bloco tem altura de sobra.
+  // Antes a régua caía para só "3ºD" e não dava para saber se era História ou Filosofia.
+  function pilhaDe(nome){
+    var t = String(nome || "").trim();
+    var achada = t.match(RE_TURMA);
+    if(!achada) return null;
+    var partes = t.split(/\s[·—–|-]\s/).map(function(p){ return p.trim(); }).filter(Boolean);
+    var disc = partes.filter(function(p){ return !RE_TURMA.test(p); }).join(" ").trim();
+    var palavras = disc.split(/\s+/).filter(Boolean);
+    var ultima = palavras.length ? palavras[palavras.length - 1] : "";
+    if(!ultima) return null;
+    var base = ultima.replace(/\.$/, "");
+    var opcoes = [ultima];
+    if(base.length > 5) opcoes.push(base.slice(0, 4) + ".");
+    if(base.length > 3) opcoes.push(base.slice(0, 3) + ".");
+    return {
+      turma: achada[0].replace(/\s+/g, ""),
+      discs: opcoes.filter(function(r, i){ return opcoes.indexOf(r) === i; })
+    };
+  }
+
+  // Só o que tem hora entra na régua; evento de dia inteiro não ocupa faixa.
+  function blocosDoDia(){
+    var out = [];
+    events().forEach(function(ev){
+      if(allDay(ev)) return;
+      var a = evStart(ev), b = evEnd(ev);
+      if(!a || isoOf(a) !== TODAY) return;
+      var ini = minOf(a), fim = b ? minOf(b) : ini + 50;
+      if(b && isoOf(b) !== TODAY) fim = 24 * 60;      // atravessa a meia-noite
+      if(fim <= ini) fim = ini + 30;
+      out.push({
+        ini: ini, fim: fim,
+        rots: rotulos(ev.summary),
+        pilha: pilhaDe(ev.summary),
+        tipo: isGrade(ev) ? "aula" : "fora",
+        nome: (ev.summary || "compromisso").trim(),
+        link: ev.htmlLink || "https://calendar.google.com/calendar/r/day"
+      });
+    });
+    return out;
+  }
+
+  var COMPRIME_VAZIOS = true;     // vão morto de mais de 20 min custa 25% da largura
+
+  // Sem isto, as duas janelas vazias do dia (almoço e fim de tarde) comem metade da
+  // régua e cada aula de 50 min fica estreita demais para caber o rótulo.
+  function montaEscala(blocos){
+    var ini = 7 * 60, fim = 18 * 60;
+    if(blocos.length){
+      ini = Math.min(ini, Math.floor(blocos[0].ini / 60) * 60);
+      fim = Math.max(fim, Math.ceil(blocos[blocos.length - 1].fim / 60) * 60);
+    }
+    ini = Math.max(0, ini); fim = Math.min(24 * 60, Math.max(fim, ini + 60));
+
+    var mortos = [], cursor = ini;
+    blocos.forEach(function(b){
+      if(b.ini - cursor > 20) mortos.push([cursor, b.ini]);
+      cursor = Math.max(cursor, b.fim);
+    });
+    if(fim - cursor > 20) mortos.push([cursor, fim]);
+
+    var peso = COMPRIME_VAZIOS ? 0.25 : 1;
+    var mapa = {}, total = 0;
+    for(var m = ini; m < fim; m++){
+      mapa[m] = total;
+      total += mortos.some(function(d){ return m >= d[0] && m < d[1]; }) ? peso : 1;
+    }
+    mapa[fim] = total;
+    if(!total) total = 1;
+    Object.keys(mapa).forEach(function(k){ mapa[k] = (mapa[k] / total) * 100; });
+
+    return {
+      ini: ini, fim: fim, mortos: mortos,
+      comprime: COMPRIME_VAZIOS && mortos.length > 0,
+      pos: function(min){
+        var k = Math.max(ini, Math.min(fim, Math.round(min)));
+        return mapa[k];
+      }
+    };
+  }
+
+  function renderRail(){
+    var track = el("track"), axis = el("axis"), st = S.agenda;
+    if(!track) return;
+
+    if(!st.data){
+      track.innerHTML = '<div class="track-base"></div>';
+      axis.innerHTML = "";
+      el("legend-gap").hidden = true;
+      return;
+    }
+
+    var blocos = blocosDoDia();
+    var ESC = montaEscala(blocos);
+    var agora = minOf(new Date());
+    el("legend-gap").hidden = !ESC.comprime;
+
+    var prox = -1;
+    for(var i = 0; i < blocos.length; i++){ if(blocos[i].ini > agora){ prox = i; break; } }
+
+    // O rótulo é decidido pela largura REAL do bloco, não por um limiar em %:
+    // nome completo se couber, sigla se não couber, nada se nem isso couber.
+    var trackPx = track.clientWidth || 1000;
+    // Bloco estreito (aula de 50 min no celular) perde parte do respiro lateral
+    // para ainda caber a hora e a turma.
+    var folgaDe = function(px){ return px < 90 ? 5 : 10; };
+    var cabe = function(px, t){ return px - 2 * folgaDe(px) >= t.length * 7.2 + 4; };
+    var dentro = agora >= ESC.ini && agora <= ESC.fim;
+
+    var noMorto = function(min){ return ESC.comprime && ESC.mortos.some(function(d){ return min > d[0] && min < d[1]; }); };
+    var dur = function(m){ var hh = Math.floor(m / 60), mm = m % 60;
+      return hh ? hh + "h" + (mm ? (mm < 10 ? "0" : "") + mm : "") : mm + " min"; };
+
+    var h = '<div class="track-base">';
+    if(ESC.comprime){
+      ESC.mortos.forEach(function(d){
+        var l = ESC.pos(d[0]), w = ESC.pos(d[1]) - l;
+        h += '<div class="gapz" style="left:' + l + '%;width:' + w + '%" title="' + esc(hhmm(d[0]) + "–" + hhmm(d[1]) + " livre") + '">'
+          +  (w / 100 * trackPx >= 46 ? '<b>' + dur(d[1] - d[0]) + '</b>' : "") + '</div>';
+      });
+    }
+    for(var hg = Math.ceil(ESC.ini / 60); hg * 60 <= ESC.fim; hg++){
+      if(noMorto(hg * 60)) continue;
+      h += '<i style="left:' + ESC.pos(hg * 60) + '%"></i>';
+    }
+    h += '</div>';
+
+    // Faixas: eventos que se sobrepõem dividem a altura em vez de se taparem.
+    var fimGrupo = -1, grupo = [], raias = [];
+    var fechaGrupo = function(){ grupo.forEach(function(g){ g.n = raias.length; }); grupo = []; raias = []; };
+    blocos.forEach(function(b){
+      if(b.ini >= fimGrupo) fechaGrupo();
+      var r = 0; while(r < raias.length && raias[r] > b.ini) r++;
+      raias[r] = b.fim; b.raia = r; grupo.push(b);
+      fimGrupo = Math.max(fimGrupo, b.fim);
+    });
+    fechaGrupo();
+    var ALT = 80, FOLGA = 2;
+    if(dentro) h += '<div class="track-shade" style="width:' + ESC.pos(agora) + '%"></div>';
+
+    blocos.forEach(function(b, idx){
+      var passou = b.fim <= agora;
+      var emCurso = b.ini <= agora && agora < b.fim;
+      var larg = ESC.pos(b.fim) - ESC.pos(b.ini);
+      var px = larg / 100 * trackPx;
+      var n = b.n || 1, alt = (ALT - FOLGA * (n - 1)) / n, topo = b.raia * (alt + FOLGA);
+      var rot = "";
+      if(alt >= 22){
+        for(var ri = 0; ri < b.rots.length; ri++){ if(cabe(px, b.rots[ri])){ rot = b.rots[ri]; break; } }
+      }
+      // Só sobrou a turma (ou nada)? Tenta turma + disciplina em duas linhas.
+      var linha2 = "";
+      if(b.pilha && alt >= 44 && (!rot || rot === b.pilha.turma) && cabe(px, b.pilha.turma)){
+        for(var di = 0; di < b.pilha.discs.length; di++){
+          if(cabe(px, b.pilha.discs[di])){ rot = b.pilha.turma; linha2 = b.pilha.discs[di]; break; }
+        }
+      }
+      var comHora = px - 2 * folgaDe(px) >= 36 && alt >= (linha2 ? 62 : 40);
+      var estreito = folgaDe(px) < 10;
+      var dica = b.nome + " · " + hhmm(b.ini) + "–" + hhmm(b.fim) + (idx === prox ? " · a seguir" : "")
+               + (n > 1 ? " · em conflito com outro evento" : "");
+      var pct = emCurso ? Math.max(0, Math.min(100, (agora - b.ini) / (b.fim - b.ini) * 100)) : 0;
+      h += '<a class="seg ' + b.tipo + (passou ? " past" : "") + (emCurso ? " now" : "") + (estreito ? " estreito" : "") + '"'
+        +  ' href="' + esc(b.link) + '" target="_blank" rel="noopener noreferrer"'
+        +  ' style="left:calc(' + ESC.pos(b.ini) + '% + 1px);width:calc(' + larg + '% - 2px);top:' + topo + 'px;height:' + alt + 'px"'
+        +  ' title="' + esc(dica) + '" aria-label="' + esc(dica) + '">'
+        +  (emCurso ? '<i class="prog" style="width:' + pct + '%"></i>' : "")
+        +  (comHora ? '<span class="h">' + hhmm(b.ini) + '</span>' : "")
+        +  (rot ? '<span class="t">' + esc(rot) + '</span>' : "")
+        +  (linha2 ? '<span class="t t2">' + esc(linha2) + '</span>' : "")
+        +  '</a>';
+    });
+    if(dentro){
+      h += '<div class="nowline" style="left:' + ESC.pos(agora) + '%"></div>'
+        +  '<div class="nowpin" style="' + pinPos(ESC.pos(agora) / 100 * trackPx, trackPx) + '">agora ' + hhmm(agora) + '</div>';
+    }
+    track.innerHTML = h;
+
+    var eixo = "";
+    for(var hr = Math.ceil(ESC.ini / 60); hr * 60 <= ESC.fim; hr++){
+      if(hr % 2 === 0) continue;                                   // só horas ímpares
+      var min = hr * 60;
+      if(ESC.comprime && ESC.mortos.some(function(d){ return min > d[0] + 5 && min < d[1] - 5; })) continue;
+      eixo += '<i style="left:' + ESC.pos(min) + '%">' + hr + 'h</i>';
+    }
+    axis.innerHTML = eixo;
+  }
+
+  // O selo centraliza na linha, mas nunca sai pelas bordas do cartão.
+  function pinPos(x, w){
+    var meio = 46;
+    if(x < meio) return "left:0;transform:none";
+    if(x > w - meio) return "left:auto;right:0;transform:none";
+    return "left:" + x + "px";
+  }
+
+  function hhmm(min){
+    var h = Math.floor(min / 60), m = min % 60;
+    return (h < 10 ? "0" : "") + h + ":" + (m < 10 ? "0" : "") + m;
+  }
+
+  /* A próxima coisa, em uma linha — vale para aula e para compromisso avulso. */
+  function renderBand(){
+    var host = el("rail-next"), st = S.agenda;
+
+    function pinta(olho, oque, onde, link, agora){
+      host.innerHTML = '<p class="rail-eyebrow' + (agora ? ' is-now' : '') + '">' + olho + '</p>'
+        + '<h2 class="rail-what">'
+        +   (link ? '<a href="' + esc(link) + '" target="_blank" rel="noopener noreferrer">' + esc(oque) + '</a>' : esc(oque))
+        + '</h2>'
+        + (onde ? '<p class="rail-where">' + onde + '</p>' : "");
+    }
+
+    if(!st.data){
+      pinta('agenda', st.status === "error" ? "indisponível agora" : "carregando…", "");
+      return;
+    }
+
+    var now = new Date(), all = events(), cur = null, nxt = null;
+    for(var i = 0; i < all.length; i++){
+      var a = evStart(all[i]), b = evEnd(all[i]);
+      // Dia inteiro não é "agora": senão esconde a aula que está de fato acontecendo.
+      if(allDay(all[i])){ if(!nxt && a > now) nxt = all[i]; continue; }
+      if(!cur && a <= now && b && b >= now){ cur = all[i]; continue; }
+      if(!nxt && a > now){ nxt = all[i]; }
+    }
+
+    if(!cur && !nxt){
+      pinta('nada à frente', "Sem compromissos nos próximos sete dias.", "");
+      return;
+    }
+
+    if(cur){
+      var restam = Math.round((evEnd(cur) - now) / 60000);
+      var fim = (restam >= 0 && restam < 60) ? "termina em " + restam + " min" : "até " + fTime.format(evEnd(cur));
+      var ondeC = '<span class="mono">' + esc(fTime.format(evStart(cur))) + " – " + esc(fTime.format(evEnd(cur))) + '</span>'
+                + (cur.location ? ' · ' + esc(cur.location) : "")
+                + ' · ' + esc(fim);
+      pinta('agora <span class="sep">·</span> ' + (isGrade(cur) ? 'aula da grade' : 'fora da grade'),
+            (cur.summary || "compromisso").trim(), ondeC, cur.htmlLink, true);
+      return;
+    }
+
+    var ini = evStart(nxt), mins = Math.round((ini - now) / 60000), dia = isoOf(ini), when;
+    if(allDay(nxt)){
+      when = (dia === TODAY) ? "hoje, o dia todo" : cap(fShort.format(ini)) + ", o dia todo";
+    } else if(mins < 1){
+      when = "começando";
+    } else if(mins < 60){
+      when = "daqui a " + mins + " min";
+    } else if(dia === TODAY){
+      when = "hoje às " + fTime.format(ini);
+    } else if(dia === addDays(TODAY, 1)){
+      when = "amanhã às " + fTime.format(ini);
+    } else {
+      when = cap(fShort.format(ini)) + " às " + fTime.format(ini);
+    }
+
+    var ondeN = allDay(nxt)
+      ? (nxt.location ? esc(nxt.location) : "")
+      : '<span class="mono">' + esc(fTime.format(ini))
+        + (evEnd(nxt) ? " – " + esc(fTime.format(evEnd(nxt))) : "") + '</span>'
+        + (nxt.location ? ' · ' + esc(nxt.location) : "")
+        + ' · ' + (isGrade(nxt) ? "aula da grade" : "fora da grade");
+
+    pinta('a seguir <span class="sep">·</span> ' + esc(when),
+          (nxt.summary || "compromisso").trim(), ondeN, nxt.htmlLink);
+  }
+
+  function renderAgenda(){
+    var st = S.agenda, body = el("agenda-body");
+
+    if(st.status==="loading" && !st.data){ body.innerHTML='<div class="skel"><i></i><i></i><i></i></div>'; return; }
+    if(st.status==="error"){
+      var ec = stateHTML(errCopy(st.err,"Google Agenda"));
+      body.innerHTML = ec; el("agenda-count").textContent = "";
+      el("prox-body").innerHTML = ec; el("prox-count").textContent = "";
+      return;
+    }
+    if(!st.data){ body.innerHTML='<div class="empty">Sem dados da agenda.</div>'; return; }
+
+    var all   = events();
+    var today = all.filter(function(e){ return isoOf(evStart(e)) === TODAY; });
+    var later = all.filter(function(e){ return isoOf(evStart(e)) > TODAY; });
+    var extras = today.filter(function(e){ return !isGrade(e); });
+
+    el("agenda-count").textContent = today.length
+      ? today.length + (today.length > 1 ? " blocos" : " bloco")
+        + (extras.length ? " · " + extras.length + " fora da grade" : "")
+      : "";
+
+    if(!today.length){
+      body.innerHTML = staleBar(st) + '<div class="empty">Nada marcado para hoje.</div>';
+    } else {
+      var now = new Date(), divisor = false;
+      var h = staleBar(st) + '<ul class="tl">';
+      today.forEach(function(ev){
+        var a = evStart(ev), b = evEnd(ev);
+        var dia  = allDay(ev);
+        var past = !dia && b && b < now;
+        var cur  = !dia && a <= now && b && b >= now;
+        if(!divisor && !past && !cur && a > now){
+          h += '<li class="nowdiv"><b>agora</b><i></i></li>';
+          divisor = true;
+        }
+        var meta = (allDay(ev) ? "o dia todo"
+                    : esc(fTime.format(a)) + (b ? "–" + esc(fTime.format(b)) : ""))
+                 + (ev.location ? ' · ' + esc(ev.location) : "")
+                 + (isGrade(ev) ? "" : ' · <span class="fora">fora da grade</span>');
+        h += '<li class="' + (past ? "past" : cur ? "now" : "") + '">'
+           +   '<a href="' + esc(ev.htmlLink || "https://calendar.google.com/calendar/r/day") + '" target="_blank" rel="noopener noreferrer">'
+           +     '<span class="time">' + (allDay(ev) ? "dia" : esc(fTime.format(a))) + '</span>'
+           +     '<span class="body"><span class="title">' + esc(ev.summary || "(sem título)") + '</span>'
+           +     '<span class="meta">' + meta + '</span></span>'
+           +   '</a></li>';
+      });
+      h += '</ul>';
+      if(st.data.nextPageToken){
+        h += '<div class="stale">a semana tem mais eventos do que coube nesta busca — abra o Google Agenda para ver o restante</div>';
+      }
+      body.innerHTML = h;
+    }
+
+    /* --- próximos dias: um bloco por dia, aulas resumidas, avulsos listados --- */
+    var dias = [], mapa = {};
+    later.forEach(function(ev){
+      var d = isoOf(evStart(ev));
+      if(!mapa[d]){ mapa[d] = {dia:d, aulas:0, extras:[]}; dias.push(mapa[d]); }
+      if(isGrade(ev)) mapa[d].aulas++; else mapa[d].extras.push(ev);
+    });
+    dias.sort(function(a,b){ return a.dia < b.dia ? -1 : 1; });
+
+    var totalExtras = later.filter(function(e){ return !isGrade(e); }).length;
+    el("prox-count").textContent = totalExtras
+      ? totalExtras + " fora da grade"
+      : (dias.length ? "só a grade" : "");
+
+    if(!dias.length){
+      el("prox-body").innerHTML = '<div class="empty">Nada marcado nos próximos sete dias.</div>';
+      return;
+    }
+    var ph = '<div class="days">';
+    dias.forEach(function(g){
+      var ref = new Date(g.dia + "T12:00:00" + OFF);
+      var conta = (g.aulas ? g.aulas + (g.aulas > 1 ? " aulas" : " aula") : "")
+                + (g.aulas && g.extras.length ? " · " : "")
+                + (g.extras.length ? g.extras.length + (g.extras.length > 1 ? " compromissos" : " compromisso") : "");
+      ph += '<div class="day"><div class="day-head"><b>' + esc(cap(fShort.format(ref))) + '</b>'
+          +   (conta ? '<span class="count">' + esc(conta) + '</span>' : "") + '</div>';
+      if(!g.extras.length){
+        ph += '<p class="day-quiet">Só a grade — nenhum compromisso extra.</p>';
+      } else {
+        g.extras.forEach(function(ev){
+          var a = evStart(ev);
+          ph += '<a class="day-item" href="' + esc(ev.htmlLink || "https://calendar.google.com/calendar/r/week") + '" target="_blank" rel="noopener noreferrer">'
+              +   '<span class="time">' + (allDay(ev) ? "dia" : esc(fTime.format(a))) + '</span>'
+              +   '<span class="t">' + esc(ev.summary || "(sem título)") + '</span></a>';
+        });
+      }
+      ph += '</div>';
+    });
+    ph += '</div>';
+    el("prox-body").innerHTML = ph;
+  }
+
+  /* ---------------- tarefas ---------------- */
+  // dueDate pode vir local ("2026-09-22T08:00") ou em UTC/offset ("…Z", "…-03:00").
+  function dueAt(t){
+    var s = t.dueDate || "";
+    if(s.indexOf("T") === -1) return null;
+    if(/[zZ]$|[+-]\d\d:?\d\d$/.test(s)) return ok(new Date(s));
+    return ok(new Date(s.slice(0,19) + OFF));
+  }
+  function taskDate(t){ var a = dueAt(t); return a ? isoOf(a) : (t.dueDate||"").slice(0,10); }
+
+  function taskBuckets(){
+    var list = ((S.tarefas.data && S.tarefas.data.tasks) || []).filter(function(t){ return !t.checked; });
+    var b = {atrasadas:[], hoje:[], semana:[]};
+    list.forEach(function(t){
+      var d = taskDate(t);
+      if(!d) return;
+      if(d < TODAY) b.atrasadas.push(t);
+      else if(d === TODAY) b.hoje.push(t);
+      if(d <= WEEK_END) b.semana.push(t);
+    });
+    var byDate = function(a,c){ return taskDate(a) < taskDate(c) ? -1 : taskDate(a) > taskDate(c) ? 1 : (a.priority||"p4").localeCompare(c.priority||"p4"); };
+    b.atrasadas.sort(byDate); b.hoje.sort(byDate); b.semana.sort(byDate);
+    return b;
+  }
+
+  var lastAction = null, lastActionTimer = null;
+
+  function findTask(id){
+    var d = S.tarefas.data, out = null;
+    if(d && d.tasks) d.tasks.forEach(function(t){ if(t.id === id) out = t; });
+    return out;
+  }
+
+  function setLastAction(a){                    // não redesenha: quem chama já faz isso
+    lastAction = a;
+    if(lastActionTimer) clearTimeout(lastActionTimer);
+    lastActionTimer = setTimeout(function(){ lastAction = null; renderTarefas(); }, 25000);
+  }
+
+  function clearLastAction(){
+    lastAction = null;
+    if(lastActionTimer){ clearTimeout(lastActionTimer); lastActionTimer = null; }
+  }
+
+  function undoBarHTML(){
+    var a = lastAction;
+    if(!a) return "";
+    var verb = a.kind === "moved" ? "Adiada para amanhã"
+             : a.recurring ? "Ocorrência concluída" : "Concluída";
+    return '<div id="undo-host" aria-live="polite"><div class="undobar">'
+      +   '<span class="t">' + esc(verb) + ' · ' + esc(a.content) + '</span>'
+      +   '<button type="button" data-undo="1"' + (a.busy ? ' disabled' : '') + '>'
+      +     (a.busy ? 'desfazendo…' : 'Desfazer')
+      +   '</button>'
+      +   (a.err ? '<span class="t" style="color:var(--urgent);flex-basis:100%">' + esc(a.err) + '</span>' : "")
+      + '</div></div>';
+  }
+
+  // Concluir uma tarefa recorrente não a fecha: avança a ocorrência.
+  // Por isso o inverso dela é reagendar de volta, não reabrir.
+  function undoIsReschedule(a){
+    return a.kind === "moved" || (a.kind === "done" && a.recurring);
+  }
+
+  function undoLast(){
+    var a = lastAction;
+    if(!a || a.busy) return;
+    if(!mcpRef){ a.err = "Sem conexão com o Todoist nesta visualização."; renderTarefas(); return; }
+
+    var volta = undoIsReschedule(a);
+    if(volta && !a.prevDue){
+      a.err = "Não sei a data anterior desta tarefa — desfaça pelo Todoist.";
+      renderTarefas(); return;
+    }
+
+    a.busy = true; a.err = null; renderTarefas();
+
+    var call = volta
+      ? mcpRef.callTool("Todoist", "reschedule-tasks", {tasks:[{id:a.id, date:a.prevDue}]})
+      : mcpRef.callTool("Todoist", "uncomplete-tasks", {ids:[a.id]});
+
+    call.then(function(r){
+      var pl = r && r.payload, ok;
+      if(volta){
+        ok = pl && ((pl.rescheduledTaskIds && pl.rescheduledTaskIds.indexOf(a.id) !== -1)
+                 || (pl.tasks && pl.tasks.length));
+      } else {
+        ok = pl && ((pl.uncompleted && pl.uncompleted.indexOf(a.id) !== -1) || pl.successCount >= 1);
+      }
+      if(!ok){
+        a.busy = false;
+        a.err = "O Todoist recebeu o pedido mas não desfez. Abra a tarefa no Todoist.";
+        renderTarefas(); return;
+      }
+      restoreLocally(a);
+      clearLastAction();
+      renderTarefas();
+      return mcpRef.invalidate("Todoist", "find-tasks-by-date").catch(function(){});
+    }).catch(function(e){
+      var code = e && e.code;
+      a.busy = false;
+      if(code === "server_unavailable" || code === "upstream_error" || code === "cancelled" || code === "rate_limited"){
+        a.err = "Não deu para confirmar se desfez. Confira no Todoist; a lista recarrega em instantes.";
+        mcpRef.invalidate("Todoist", "find-tasks-by-date").catch(function(){});
+      } else {
+        var c = errCopy(e, "Todoist");
+        a.err = c.t + " — " + c.p;
+      }
+      renderTarefas();
+    });
+  }
+
+  function restoreLocally(a){
+    var d = S.tarefas.data;
+    if(!d) return;
+    if(!d.tasks) d.tasks = [];
+    var achou = false;
+    d.tasks.forEach(function(t){
+      if(t.id !== a.id) return;
+      achou = true;
+      if(a.prevDue) t.dueDate = a.prevDue;
+      t.checked = false;
+    });
+    if(!achou && a.task){
+      if(a.prevDue) a.task.dueDate = a.prevDue;
+      a.task.checked = false;
+      d.tasks.push(a.task);
+    }
+  }
+
+  var VAZIO_TAREFA = {
+    atrasadas: "Nada atrasado. Dia em ordem.",
+    hoje: "Tudo de hoje está feito.",
+    semana: "Nenhuma tarefa nos próximos 7 dias."
+  };
+
+  function renderTarefas(){
+    var st = S.tarefas, body = el("tarefas-body");
+
+    if(st.status==="loading" && !st.data){ body.innerHTML='<div class="skel"><i></i><i></i><i></i></div>'; return; }
+    if(st.status==="error"){ body.innerHTML = stateHTML(errCopy(st.err,"Todoist")); el("tarefas-count").textContent=""; return; }
+    if(!st.data){ body.innerHTML='<div class="empty">Sem dados do Todoist.</div>'; return; }
+
+    var b = taskBuckets();
+    if(!S.tarefas.picked){ S.tarefas.picked = true; if(b.atrasadas.length) taskFilter = "atrasadas"; }
+
+    // Concluir ou adiar não passa por renderAll; sem isto a pílula do topo ficaria
+    // contando uma tarefa que já saiu da lista.
+    renderPills();
+
+    var chips = el("tarefas-chips").querySelectorAll(".chip");
+    Array.prototype.forEach.call(chips, function(c){
+      c.querySelector(".n").textContent = b[c.dataset.filter].length;
+      c.setAttribute("aria-pressed", String(c.dataset.filter === taskFilter));
+    });
+
+    var list = b[taskFilter];
+    el("tarefas-count").textContent = list.length ? list.length + " aberta" + (list.length > 1 ? "s" : "") : "";
+
+    if(!list.length){
+      body.innerHTML = staleBar(st)
+        + '<div class="empty"><span>' + esc(VAZIO_TAREFA[taskFilter]) + '</span>'
+        + '<a class="empty-act" href="https://app.todoist.com/app/today" target="_blank" rel="noopener noreferrer">Abrir o Todoist</a></div>'
+        + undoBarHTML();
+      restoreErrs();
+      return;
+    }
+
+    // A data sai de cada linha e vira cabeçalho de grupo; só volta na linha quando
+    // diz algo que o grupo não diz (quantos dias de atraso, recorrência, etiqueta).
+    var vis = list.slice(0,25);
+    var grupos = [], porChave = {};
+    vis.forEach(function(t){
+      var d = taskDate(t), late = d < TODAY, isToday = d === TODAY;
+      var chave = late ? "late" : isToday ? "hoje" : d;
+      if(!porChave[chave]){
+        porChave[chave] = {
+          chave: chave, late: late,
+          nome: late ? "atrasadas" : isToday ? "hoje" : cap(fShort.format(new Date(d+"T12:00:00"+OFF))),
+          itens: []
+        };
+        grupos.push(porChave[chave]);
+      }
+      porChave[chave].itens.push(t);
+    });
+    var mostraCabeca = grupos.length > 1;
+
+    var h = staleBar(st);
+    grupos.forEach(function(g){
+    h += '<div class="grp">';
+    if(mostraCabeca){
+      h += '<div class="grp-head"><b class="' + (g.late ? "late" : "") + '">' + esc(g.nome) + '</b>'
+        +  '<span class="n">' + g.itens.length + '</span></div>';
+    }
+    h += '<ul class="list">';
+    g.itens.forEach(function(t){
+      var d = taskDate(t), late = d < TODAY;
+      var dias = late ? Math.round((new Date(TODAY+"T12:00:00"+OFF) - new Date(d+"T12:00:00"+OFF)) / 86400000) : 0;
+      var at = dueAt(t);
+      var hora = (!late && at) ? fTime.format(at) : "";
+      var passou = !late && at && at < new Date();
+      if(passou) hora += " · passou da hora";
+      var extra = late ? (dias === 1 ? "há 1 dia" : "há " + dias + " dias")
+               : (t.recurring ? String(t.recurring)
+               : ((t.labels && t.labels.length) ? t.labels.join(", ") : ""));
+      var when = [hora, extra].filter(Boolean).join(" · ");
+      var pr = t.priority || "p4";
+      var nivel = pr.slice(1);
+      var hint = (t.recurring ? "Concluir esta ocorrência de: " : "Concluir: ") + (t.content || "")
+               + " — prioridade " + nivel;
+      h += '<li class="row tight" data-tid="' + esc(t.id) + '">'
+         +   '<a class="row-main" href="https://app.todoist.com/app/task/' + esc(t.id) + '" target="_blank" rel="noopener noreferrer">'
+         +     '<span class="row-title">' + esc(t.content) + '</span>'
+         +     (when ? '<span class="row-when' + (passou ? ' late' : '') + '">' + esc(when) + '</span>' : "")
+         +   '</a>'
+         +   '<button class="check ' + esc(pr) + '" type="button" data-tid="' + esc(t.id) + '" data-noprint'
+         +     ' title="' + esc(hint) + '" aria-label="' + esc(hint) + '"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></i></button>'
+         +   '<button class="snooze" type="button" data-snooze="' + esc(t.id) + '" data-noprint'
+         +     ' title="' + esc("Adiar para amanhã: " + (t.content || "")) + '"'
+         +     ' aria-label="' + esc("Adiar para amanhã: " + (t.content || "")) + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>'
+         + '</li>';
+    });
+    h += '</ul></div>';
+    });
+    if(list.length > vis.length){
+      var resto = list.length - vis.length;
+      h += '<div class="empty" style="padding-top:4px">'
+        +   '<a class="empty-act" href="https://app.todoist.com/app/' + (taskFilter === "semana" ? "upcoming" : "today") + '" target="_blank" rel="noopener noreferrer">'
+        +     'mais ' + resto + ' no Todoist</a></div>';
+    }
+    body.innerHTML = h + undoBarHTML();
+    restoreErrs();
+  }
+
+  /* ---------------- e-mail ---------------- */
+  function mailState(){ return S.email.tabs[mailTab]; }
+
+  // Conta as conversas que VIERAM. Nunca o resultCountEstimate do Gmail: ele conta
+  // mensagens do recorte inteiro, não conversas, e fica parado num número grande —
+  // era ele que deixava "Tudo não lido" marcando 201 para sempre com 12 na lista.
+  function mailCount(slot){
+    var d = slot && slot.data; if(!d) return null;
+    return (d.threads || []).length;
+  }
+  // Página cheia e o Gmail ainda tem mais: o número ganha um "+".
+  function mailMais(slot){
+    var d = slot && slot.data;
+    return !!(d && d.nextPageToken);
+  }
+  function mailSelo(slot){
+    var n = mailCount(slot);
+    return (n === null) ? "" : (n + (mailMais(slot) ? "+" : ""));
+  }
+
+  function renderEmail(){
+    var st = mailState(), body = el("email-body");
+
+    Array.prototype.forEach.call(el("email-chips").querySelectorAll(".chip"), function(c){
+      c.setAttribute("aria-pressed", String(c.dataset.mail === mailTab));
+      c.querySelector(".n").textContent = mailSelo(S.email.tabs[c.dataset.mail]);
+    });
+
+    if(st.status==="loading" && !st.data){ body.innerHTML='<div class="skel"><i></i><i></i><i></i></div>'; return; }
+    if(st.status==="error"){ body.innerHTML = stateHTML(errCopy(st.err,"Gmail")); el("email-count").textContent=""; return; }
+    if(!st.data){ body.innerHTML='<div class="empty">Sem dados do Gmail.</div>'; return; }
+
+    var threads = st.data.threads || [];
+    var MAIL_MAX = 12;
+    var mostra = threads.slice(0, MAIL_MAX);
+    var sobrou = threads.length - mostra.length;
+
+    // O cabeçalho conta o que está NA TELA. Antes dizia "25 na lista" e desenhava 12.
+    el("email-count").textContent = !threads.length ? ""
+      : (sobrou > 0 ? mostra.length + " de " + threads.length + (mailMais(st) ? "+" : "")
+                    : threads.length + (threads.length > 1 ? " conversas" : " conversa"));
+
+    if(!threads.length){
+      body.innerHTML = staleBar(st) + '<div class="empty">'
+        + (mailTab==="pri" ? "Caixa limpa. Nada da escola ou marcado com estrela esperando você."
+          : mailTab==="alunos" ? "Nenhuma mensagem de aluno nem do Classroom na caixa de entrada."
+          : "Nenhum e-mail não lido.") + '</div>';
+      return;
+    }
+
+    var h = staleBar(st) + '<ul class="list">';
+    mostra.forEach(function(th){
+      var msgs = th.messages || [];
+      var m = msgs[msgs.length-1] || {};
+      // O estado é da CONVERSA: basta uma mensagem não lida (ou com estrela) dentro dela.
+      // Lendo só a última, uma conversa com resposta antiga não lida aparecia como lida.
+      var unread = false, starred = false;
+      msgs.forEach(function(x){
+        var lb = x.labelIds || [];
+        if(lb.indexOf("UNREAD")  !== -1) unread  = true;
+        if(lb.indexOf("STARRED") !== -1) starred = true;
+      });
+      var sameDay = m.date && isoOf(new Date(m.date)) === TODAY;
+      var when = m.date ? (sameDay ? fTime.format(new Date(m.date)) : fDM.format(new Date(m.date))) : "";
+      var from = (m.sender||"").replace(/^"?(.*?)"?\s*<.*>$/, "$1");
+      // O viewUrl vem do próprio Gmail e já traz a conta certa. O link montado à mão
+      // usava /u/0/, que é a PRIMEIRA conta aberta no navegador — nem sempre esta.
+      var href = th.viewUrl || m.viewUrl || ("https://mail.google.com/mail/u/0/#inbox/" + th.id);
+      h += '<li class="row' + (unread ? " unread" : "") + '">'
+         +   '<a class="row-main" href="' + esc(href) + '" target="_blank" rel="noopener noreferrer">'
+         +     '<span class="row-title">' + esc(m.subject || "(sem assunto)") + '</span>'
+         +     '<span class="row-meta">' + esc(from)
+         +       (when ? ' <span class="sep">·</span> ' + esc(when) : "")
+         +       (starred ? ' <span class="tag today">com estrela</span>' : "")
+         +     '</span>'
+         +   '</a></li>';
+    });
+    h += '</ul>';
+    // Também quando a página veio cheia e o Gmail ainda tem mais (sobrou = 0, mas há "+"):
+    // sem isto o número do filtro mostrava "12+" sem nenhum caminho para ver o resto.
+    if(sobrou > 0 || mailMais(st)){
+      h += '<div class="empty" style="padding-top:4px">'
+        +   '<a class="empty-act" href="' + esc(gmailBase(threads)) + '" target="_blank" rel="noopener noreferrer">'
+        +     (sobrou > 0 ? 'mais ' + sobrou + (mailMais(st) ? "+" : "") + ' no Gmail'
+                          : 'ver o resto no Gmail') + '</a></div>';
+    }
+    body.innerHTML = h;
+  }
+
+  // Base do Gmail com a conta certa, tirada do próprio viewUrl que o conector devolve.
+  function gmailBase(threads){
+    var v = threads && threads[0] && threads[0].viewUrl;
+    var i = v ? v.indexOf("#") : -1;
+    return (i > 0) ? v.slice(0, i) + "#inbox" : "https://mail.google.com/mail/u/0/#inbox";
+  }
+
+  /* ---------------- clima ---------------- */
+  // O nome do conector leva o ®; o texto para o leitor, não.
+  var WX_SRV = "AccuWeather®", WX_NOME = "AccuWeather";
+  var WX_PADRAO = "Osasco, São Paulo";      // ponto de partida; trocável pela própria página
+  var WX_CHAVE = "painel.wx.loc";
+
+  var wxLoc = null, wxUnsub = null;
+  var wxPicking = false, wxHits = null, wxSearching = false, wxSearchErr = null, wxQuery = "";
+
+  function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+  function lsSet(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+
+  // AccuWeather devolve um número de ícone; aqui vira um símbolo legível sem imagem externa.
+  function wxIcon(code){
+    var c = Number(code) || 0, k;
+    if(c <= 2 || c === 30) k = "sol";
+    else if(c <= 5) k = "sol-nuvem";
+    else if(c <= 8 || c === 38 || c === 31) k = "nuvem";
+    else if(c === 11) k = "nevoa";
+    else if(c <= 14 || c === 18 || c === 39 || c === 40) k = "chuva";
+    else if(c <= 17 || c === 41 || c === 42) k = "raio";
+    else if(c === 32) k = "vento";
+    else if(c >= 33 && c <= 37) k = "lua";
+    else k = "neve";
+    var P = {
+      "sol": '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+      "sol-nuvem": '<path d="M8 2v1.5M3.3 4.3l1 1M2 9h1.5M12.7 4.3l-1 1"/><path d="M5.3 11.2A3.5 3.5 0 1 1 11.6 8"/><path d="M17 20H9a4 4 0 1 1 .9-7.9A5 5 0 0 1 19 13a3.5 3.5 0 0 1-2 7z"/>',
+      "nuvem": '<path d="M17.5 19H8a5 5 0 1 1 1.1-9.9A6 6 0 0 1 20.4 11 4 4 0 0 1 17.5 19z"/>',
+      "nevoa": '<path d="M4 9h16M3 13h18M5 17h14"/>',
+      "chuva": '<path d="M17.5 15H8a5 5 0 1 1 1.1-9.9A6 6 0 0 1 20.4 7 4 4 0 0 1 17.5 15z"/><path d="M8 18l-1 3M12 18l-1 3M16 18l-1 3"/>',
+      "raio": '<path d="M17.5 15H8a5 5 0 1 1 1.1-9.9A6 6 0 0 1 20.4 7 4 4 0 0 1 17.5 15z"/><path d="M12.5 15l-2 4h3l-2 4"/>',
+      "vento": '<path d="M3 8h11a3 3 0 1 0-3-3M3 12h16a3 3 0 1 1-3 3M3 16h7"/>',
+      "lua": '<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
+      "neve": '<path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9"/>'
+    };
+    return '<svg class="wx-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + P[k] + '</svg>';
+  }
+
+  // dbz é a refletividade do radar: 0 = sem precipitação. As frases vêm traduzidas.
+  function rainInfo(d){
+    var mc = d && d.minuteCastForecast;
+    if(!mc) return null;
+    var mins = mc.minutes || [], i, at = -1;
+    for(i = 0; i < mins.length; i++){ if((mins[i].dbz || 0) > 0){ at = i; break; } }
+    if(at === -1) return {rain:false, text: mc.summary120 || mc.summary60 || "Sem chuva na próxima hora"};
+    if(at === 0)  return {rain:true, text: "Chovendo agora"};
+    return {rain:true, text: "Chuva em " + at + " min · por volta das " + (mins[at].displayTime || "")};
+  }
+
+  function activeAlerts(d){
+    var out = [], seen = {}, agora = Date.now();
+    ((d && d.alerts) || []).forEach(function(a){
+      if(a.isActive === false) return;
+      if(a.endDateTimeEpoch && a.endDateTimeEpoch < agora) return;
+      var k = (a.name || "") + "|" + (a.startDate || "");
+      if(seen[k]) return;
+      seen[k] = 1;
+      out.push(a);
+    });
+    out.sort(function(x, y){ return (x.startDateTimeEpoch || 0) - (y.startDateTimeEpoch || 0); });
+    return out;
+  }
+
+  function wxShell(inner, cls){
+    return '<p class="wx-inline' + (cls ? " " + cls : "") + '">' + inner + '</p>';
+  }
+
+  function pickerHTML(){
+    var h = '<div class="wx-pick">'
+      + '<span class="lbl">Clima de qual cidade?</span>'
+      + '<form class="wx-form" data-wx-form="1">'
+      +   '<input type="text" id="wx-q" placeholder="cidade, estado" autocomplete="off" value="' + esc(wxQuery) + '">'
+      +   '<button type="submit"' + (wxSearching ? ' disabled' : '') + '>' + (wxSearching ? '…' : 'Buscar') + '</button>'
+      + '</form>';
+    if(wxSearchErr) h += '<span class="lbl" style="color:var(--urgent)">' + esc(wxSearchErr) + '</span>';
+    if(wxHits){
+      if(!wxHits.length){
+        h += '<span class="lbl">Nenhuma cidade com esse nome.</span>';
+      } else {
+        h += '<div class="wx-hits">';
+        wxHits.slice(0, 6).forEach(function(r){
+          h += '<button class="wx-hit" type="button" data-wx-key="' + esc(r.locationKey) + '" data-wx-name="' + esc(r.name) + '">'
+             + esc(r.name) + '</button>';
+        });
+        h += '</div>';
+      }
+    }
+    h += '<button class="wx-hit" type="button" data-wx-cancel="1">cancelar</button></div>';
+    return h;
+  }
+
+  function renderWx(){
+    var host = el("weather-host"), st = S.wx;
+
+    if(wxPicking){
+      host.innerHTML = pickerHTML();
+      var q = el("wx-q");
+      if(q){ try{ q.focus(); q.setSelectionRange(q.value.length, q.value.length); }catch(e){} }
+      return;
+    }
+
+    if(!st.data){
+      if(st.status === "error"){
+        var c = errCopy(st.err, WX_NOME);
+        host.innerHTML = wxShell(esc(c.t)
+          + ' <button class="wx-city" type="button" data-wx-pick="1">trocar cidade</button>');
+      } else {
+        host.innerHTML = wxShell("carregando o tempo…");
+      }
+      return;
+    }
+
+    var d   = st.data;
+    var cc  = d.currentConditions || {};
+    var loc = d.location || {};
+    var chuva = rainInfo(d);
+    var al = activeAlerts(d);
+
+    var h = '<b>' + wxIcon(cc.iconCode) + esc(cc.temperature || "–") + '</b> '
+      + esc(cc.phrase || "")
+      + ' · ' + (loc.supportsMinuteCast === false
+                  ? "sem previsão minuto a minuto"
+                  : (chuva ? esc(chuva.text) : "sem dados de chuva"));
+
+    if(al.length){
+      h += ' · <span class="wx-alert">' + esc(al[0].name || "alerta")
+         + (al.length > 1 ? " +" + (al.length - 1) : "") + '</span>';
+    }
+
+    h += ' <button class="wx-city" type="button" data-wx-pick="1" title="Trocar de cidade">'
+      +    esc(loc.localizedName || (wxLoc && wxLoc.name) || "cidade") + ' ▾</button>';
+
+    host.innerHTML = wxShell(h, al.length ? "alerta" : "");
+  }
+
+  function startWx(){
+    if(!mcpRef || !wxLoc) return;
+    if(wxUnsub){ try{ wxUnsub(); }catch(e){} wxUnsub = null; }
+    S.wx.status = "loading"; S.wx.data = null; S.wx.err = null; S.wx.every = 300000; S.wx.velho = false;
+    renderWx();
+    wxUnsub = mcpRef.watchTool(WX_SRV, "widgets-minutecast-claude",
+      {queryParams:{locationKey: wxLoc.key, unit:"metric", lang:"pt"}},
+      function(ev){ applyEvent("wx", ev); },
+      {cache:{staleTime:240000}, refetchInterval:300000});
+  }
+
+  function setWxLocation(loc){
+    wxLoc = loc;
+    lsSet(WX_CHAVE, JSON.stringify(loc));
+    wxPicking = false; wxHits = null; wxSearchErr = null;
+    startWx();
+  }
+
+  function loadWxLocation(){
+    var raw = lsGet(WX_CHAVE);
+    if(raw){
+      try{
+        var o = JSON.parse(raw);
+        if(o && o.key){ wxLoc = o; startWx(); return; }
+      }catch(e){}
+    }
+    // Primeira abertura: resolve a cidade padrão pela própria busca do conector.
+    mcpRef.callTool(WX_SRV, "widgets-search-claude", {queryParams:{query: WX_PADRAO}}).then(function(r){
+      var res = (r && r.payload && r.payload.results) || [];
+      if(res.length){ setWxLocation({key: res[0].locationKey, name: res[0].name}); }
+      else {
+        S.wx.status = "error";
+        S.wx.err = {code:"tool_error", message:"Não achei a cidade inicial. Escolha uma."};
+        renderWx();
+      }
+    }).catch(function(e){
+      S.wx.status = "error"; S.wx.err = e; renderWx();
+    });
+  }
+
+  function wxSearch(q){
+    if(!mcpRef || !q) return;
+    wxSearching = true; wxSearchErr = null; wxQuery = q;
+    renderWx();
+    mcpRef.callTool(WX_SRV, "widgets-search-claude", {queryParams:{query:q}}).then(function(r){
+      wxSearching = false;
+      wxHits = (r && r.payload && r.payload.results) || [];
+      renderWx();
+    }).catch(function(e){
+      wxSearching = false; wxHits = null;
+      var c = errCopy(e, WX_NOME);
+      wxSearchErr = c.t + " — " + c.p;
+      renderWx();
+    });
+  }
+
+  el("weather-host").addEventListener("click", function(e){
+    if(e.target.closest("[data-wx-pick]")){
+      wxPicking = true; wxHits = null; wxSearchErr = null; renderWx(); return;
+    }
+    if(e.target.closest("[data-wx-cancel]")){
+      wxPicking = false; renderWx(); return;
+    }
+    var hit = e.target.closest("[data-wx-key]");
+    if(hit){
+      setWxLocation({key: hit.getAttribute("data-wx-key"), name: hit.getAttribute("data-wx-name")});
+    }
+  });
+
+  el("weather-host").addEventListener("keydown", function(e){
+    if(e.key !== "Escape" || !wxPicking) return;
+    wxPicking = false; renderWx();
+    var b = el("weather-host").querySelector("[data-wx-pick]");
+    if(b) b.focus();
+  });
+
+  el("weather-host").addEventListener("submit", function(e){
+    if(!e.target.closest("[data-wx-form]")) return;
+    e.preventDefault();
+    var q = el("wx-q");
+    wxSearch(q ? q.value.trim() : "");
+  });
+
+  /* ---------------- drive ---------------- */
+  var MIMES = {
+    "application/vnd.google-apps.document":"Documento",
+    "application/vnd.google-apps.spreadsheet":"Planilha",
+    "application/vnd.google-apps.presentation":"Apresentação",
+    "application/vnd.google-apps.form":"Formulário",
+    "application/vnd.google-apps.folder":"Pasta",
+    "application/vnd.google-apps.drawing":"Desenho",
+    "application/pdf":"PDF"
+  };
+  function kindOf(m){ return MIMES[m] || "Arquivo"; }
+
+  function renderDrive(){
+    var st = S.drive, body = el("drive-body");
+
+    if(st.status==="loading" && !st.data){ body.innerHTML='<div class="skel"><i></i><i></i><i></i></div>'; return; }
+    if(st.status==="error"){ body.innerHTML = stateHTML(errCopy(st.err,"Google Drive")); el("drive-count").textContent=""; return; }
+    if(!st.data){ body.innerHTML='<div class="empty">Sem dados do Drive.</div>'; return; }
+
+    var files = (st.data.files || []).filter(function(f){ return f.mimeType !== "application/vnd.google-apps.folder"; });
+    if(!files.length) files = st.data.files || [];
+    // Doze, igual ao cartão de e-mail — os dois cartões da coluna da direita
+    // passam a caber a mesma quantidade de linhas.
+    var DRIVE_MAX = 12;
+    el("drive-count").textContent = !files.length ? ""
+      : (files.length > DRIVE_MAX ? DRIVE_MAX + " de " + files.length : files.length + " itens");
+
+    if(!files.length){ body.innerHTML = staleBar(st) + '<div class="empty">Nada recente no Drive.</div>'; return; }
+
+    var h = staleBar(st) + '<ul class="list">';
+    files.slice(0, DRIVE_MAX).forEach(function(f){
+      var t = f.modifiedTime ? new Date(f.modifiedTime) : null;
+      var when = t ? (isoOf(t) === TODAY ? "hoje " + fTime.format(t) : cap(fShort.format(t))) : "";
+      h += '<li class="row">'
+         +   '<a class="row-main" href="' + esc(f.viewUrl || "https://drive.google.com/drive/recent") + '" target="_blank" rel="noopener noreferrer">'
+         +     '<span class="row-title">' + esc(f.title || "(sem nome)") + '</span>'
+         +     '<span class="row-meta">' + esc(kindOf(f.mimeType))
+         +       (when ? ' <span class="sep">·</span> ' + esc(when) : "")
+         +     '</span>'
+         +   '</a></li>';
+    });
+    h += '</ul>';
+    body.innerHTML = h;
+  }
+
+  /* As pílulas do topo substituíram os quatro contadores: cada uma aplica o filtro
+     correspondente, em vez de ser só um número. */
+  function renderPills(){
+    var host = el("pills");
+    var b = (S.tarefas.data) ? taskBuckets() : null;
+    var pri = mailCount(S.email.tabs.pri);
+    var h = "";
+
+    if(b && b.atrasadas.length){
+      h += '<button class="pill is-urgent" type="button" data-goto="atrasadas">'
+         +   '<b>' + b.atrasadas.length + '</b> atrasada' + (b.atrasadas.length > 1 ? "s" : "") + '</button>';
+    }
+    if(b && b.hoje.length){
+      h += '<button class="pill" type="button" data-goto="hoje">'
+         +   '<b>' + b.hoje.length + '</b> para hoje</button>';
+    }
+    // Só aparece quando há o que responder: "0 e-mails esperando você" era um
+    // número fixo ocupando o topo justamente nos dias em que a caixa está limpa.
+    if(pri){
+      h += '<button class="pill" type="button" data-goto="email">'
+         +   '<b>' + pri + (mailMais(S.email.tabs.pri) ? "+" : "") + '</b> e-mail'
+         +   (pri === 1 ? "" : "s") + ' esperando você</button>';
+    }
+    host.innerHTML = h;
+  }
+
+  // Um selo só, no cabeçalho — e ele mostra a consulta MAIS ANTIGA, não a mais recente.
+  // Com a mais recente, uma seção parada às 7h ficava escondida atrás do Gmail das 11h.
+  function renderStamp(){
+    var antigo = 0, temAlgo = false, parado = false;
+    SLOTS.forEach(function(par){
+      var st = par[1]();
+      if(estaVelho(st)) parado = true;
+      if(!st.at) return;
+      temAlgo = true;
+      if(!antigo || st.at < antigo) antigo = st.at;
+    });
+    var node = el("stamp-global");
+    if(!temAlgo){ node.textContent = ""; node.removeAttribute("title"); return; }
+    node.textContent = (parado ? "mais antigo " : "atualizado ") + fTime.format(new Date(antigo));
+    node.setAttribute("title", parado
+      ? "Alguma seção parou de atualizar — o cartão dela avisa."
+      : "Hora da consulta mais antiga entre as seções.");
+  }
+
+  var SLOTS = [
+    ["agenda",  function(){ return S.agenda; }],
+    ["tarefas", function(){ return S.tarefas; }],
+    ["drive",   function(){ return S.drive; }],
+    ["clima",   function(){ return S.wx; }],
+    ["email.esperando", function(){ return S.email.tabs.pri; }],
+    ["email.alunos",    function(){ return S.email.tabs.alunos; }],
+    ["email.tudo",      function(){ return S.email.tabs.tudo; }]
+  ];
+
+  // Uma consulta registrada que nunca responde deixaria o cartão em esqueleto para
+  // sempre, sem nada a dizer. Depois deste prazo ela vira erro visível.
+  var ESPERA_MAX = 25000;
+  function checarParadas(){
+    var mudou = false;
+    SLOTS.forEach(function(par){
+      var st = par[1]();
+      if(st.status === "loading" && !st.data){
+        st.status = "error";
+        st.err = {code:"sem_resposta", message:"sem resposta em " + Math.round(ESPERA_MAX/1000) + "s"};
+        logEv(par[0], "timeout", "sem_resposta");
+        mudou = true;
+      }
+    });
+    if(mudou) renderAll();
+  }
+
+  // Redesenha só quando alguma seção muda de "fresca" para "parada" (ou volta),
+  // para não reconstruir as listas a cada meio minuto sem motivo.
+  function checarVelhice(){
+    var mudou = false;
+    SLOTS.forEach(function(par){
+      var st = par[1](), v = estaVelho(st);
+      if(!!st.velho !== v){
+        st.velho = v; mudou = true;
+        if(v) logEv(par[0], "parou-de-atualizar", "");
+      }
+    });
+    if(mudou) renderAll(); else safe("selo", renderStamp);
+  }
+  setInterval(checarVelhice, 30000);
+
+  // Sempre disponível, mesmo quando tudo parece normal: é o que você me manda numa print.
+  function renderDiag(){
+    var box = el("diagbox");
+    if(!box || !box.open) return;
+    var linhas = [];
+    linhas.push(diagLinha());
+    linhas.push("aberto há " + Math.round((Date.now() - bootAt)/1000) + "s · contrato do runtime: ver rodapé do claude.ai");
+    linhas.push("");
+    SLOTS.forEach(function(par){
+      var st = par[1]();
+      var quando = st.at ? fTime.format(new Date(st.at)) : "—";
+      linhas.push(pad(par[0], 17) + st.status
+        + (st.err && st.err.code ? " (" + st.err.code + ")" : "")
+        + (estaVelho(st) ? " PARADA" : "")
+        + " · dados: " + (st.data ? "sim" : "não") + " · " + quando);
+    });
+    linhas.push("");
+    linhas.push(evLog.length ? "eventos recebidos:" : "eventos recebidos: NENHUM");
+    evLog.slice(-10).forEach(function(e){
+      linhas.push("  " + e.ms + "ms " + e.key + " → " + e.tipo + (e.code ? " " + e.code : ""));
+    });
+    el("diagtab").textContent = linhas.join("\n");
+  }
+  function pad(s, n){ s = String(s); while(s.length < n) s += " "; return s; }
+
+  setInterval(renderDiag, 2000);
+  var _db = el("diagbox");
+  if(_db) _db.addEventListener("toggle", renderDiag);
+
+  // Quando TODAS as seções falham com o mesmo código, isso é uma condição da página,
+  // não de cada cartão: um aviso só, com o código, e um botão de recarregar.
+  function renderPageAlert(){
+    if(avisoTravado) return;          // o aviso do arranque é mais específico; não sobrescreve
+    var host = el("pagealert");
+    var slots = [S.agenda, S.tarefas, S.drive, S.wx,
+                 S.email.tabs.pri, S.email.tabs.alunos, S.email.tabs.tudo];
+    var codes = {}, ruins = 0;
+    slots.forEach(function(st){
+      if(st.status === "error" && st.err && st.err.code){
+        ruins++; codes[st.err.code] = 1;
+      }
+    });
+    var keys = Object.keys(codes);
+    if(ruins < slots.length || keys.length !== 1){ host.hidden = true; host.innerHTML = ""; return; }
+
+    var code = keys[0], t, p;
+    switch(code){
+      case "not_granted":
+        t = "Esta página não recebeu acesso aos seus conectores";
+        p = "Feche e abra o painel de novo. Quando o Claude perguntar se a página pode usar seus conectores, aceite."; break;
+      case "capability_disabled": case "capability_removed":
+        t = "Os conectores não funcionam nesta visualização";
+        p = "Abra o painel pelo claude.ai, na sua conta — não por uma cópia ou pré-visualização."; break;
+      case "needs_reauth":
+        t = "Suas conexões expiraram";
+        p = "Reconecte os conectores em Configurações → Conectores, no claude.ai, e recarregue esta página."; break;
+      case "server_not_connected":
+        t = "Nenhum conector respondeu";
+        p = "Confira em Configurações → Conectores, no claude.ai, se Agenda, Todoist, Gmail, Drive e AccuWeather seguem ligados."; break;
+      case "server_unavailable":
+        t = "Os conectores não estão respondendo";
+        p = "Parece instabilidade momentânea. A página tenta sozinha; se quiser, recarregue."; break;
+      case "sem_resposta":
+        t = "As consultas foram enviadas e nenhuma voltou";
+        p = "O painel conseguiu falar com a camada de conectores, mas nenhuma resposta chegou no prazo. Isso é da plataforma — abra o diagnóstico no rodapé e me mande a print."; break;
+      default:
+        t = "O painel não conseguiu buscar nada";
+        p = "Todas as seções falharam da mesma forma. Recarregue; se continuar, me mande o código abaixo.";
+    }
+    host.hidden = false;
+    host.innerHTML = '<div class="pagealert">'
+      + '<div class="pa-txt"><strong>' + esc(t) + '</strong><p>' + esc(p) + '</p>'
+      +   '<span class="pa-code">código: ' + esc(code) + '</span></div>'
+      + '<button class="btn" type="button" id="pa-reload">Recarregar</button>'
+      + '</div>';
+  }
+
+  el("pagealert").addEventListener("click", function(e){
+    if(e.target.closest("#pa-reload")) location.reload();
+  });
+
+  // Antes, uma exceção em renderAgenda matava tudo que vinha depois, em silêncio.
+  // Agora cada seção cai sozinha, avisa no cartão e aparece no diagnóstico.
+  function safe(nome, fn, bodyId){
+    try{ fn(); }
+    catch(err){
+      var msg = String((err && err.message) || err);
+      logEv(nome, "erro-ao-desenhar", msg.slice(0, 80));
+      if(bodyId && el(bodyId)){
+        el(bodyId).innerHTML = '<div class="state err"><strong>Esta seção falhou ao desenhar</strong>'
+          + '<p>' + esc(msg.slice(0, 160)) + '</p></div>';
+      }
+    }
+  }
+
+  function renderAll(){
+    safe("agenda",  renderAgenda,  "agenda-body");
+    safe("regua",   renderRail);
+    safe("faixa",   renderBand);
+    safe("pilulas", renderPills);
+    safe("selo",    renderStamp);
+    safe("tarefas", renderTarefas, "tarefas-body");
+    safe("email",   renderEmail,   "email-body");
+    safe("drive",   renderDrive,   "drive-body");
+    // Com o seletor aberto, redesenhar apagaria o que está sendo digitado.
+    safe("clima",   function(){ if(!wxPicking) renderWx(); });
+    safe("aviso",   renderPageAlert);
+    safe("diag",    renderDiag);
+    safe("status",  updateDot);
+  }
+
+  // A bolinha reflete o PIOR estado entre as seções, não o último evento que chegou.
+  function updateDot(){
+    if(!mcpRef || avisoTravado) return;
+    var sts = SLOTS.map(function(p){ return p[1](); });
+    var n = sts.length, err = 0, retr = 0, inst = 0, parada = 0, carreg = 0;
+    sts.forEach(function(st){
+      if(st.status === "loading" && !st.data){ carreg++; return; }
+      if(st.status === "error"){ err++; if(st.err && RETRACT[st.err.code]) retr++; return; }
+      if(st.status === "stale") inst++;
+      if(estaVelho(st)) parada++;
+    });
+    var cls, txt;
+    if(carreg === n){ cls = "dot"; txt = "buscando…"; }
+    else if(err === n){ cls = "dot down"; txt = "nenhum conector respondeu"; }
+    else if(retr){ cls = "dot warn"; txt = "um conector precisa de atenção"; }
+    else if(err || inst){ cls = "dot warn"; txt = "instabilidade em um conector"; }
+    else if(parada){ cls = "dot warn"; txt = "uma seção parou de atualizar"; }
+    else if(carreg){ cls = "dot"; txt = "buscando…"; }
+    else { cls = "dot live"; txt = "conectado · atualiza sozinho"; }
+    el("live-dot").className = cls;
+    el("live-label").textContent = txt;
+  }
+  renderAll();
+
+  /* ---------------- conectores ---------------- */
+  function offline(msg, kind){
+    el("live-dot").className = "dot " + (kind||"down");
+    el("live-label").textContent = msg;
+  }
+
+  var bootAt = Date.now();
+  var evLog = [];                 // últimos eventos recebidos, para o diagnóstico
+  function logEv(key, tipo, code){
+    evLog.push({ms: Date.now() - bootAt, key: key, tipo: tipo, code: code || ""});
+    if(evLog.length > 24) evLog.shift();
+  }
+
+  // Fatos do arranque, para virar uma linha que você pode me mandar numa print.
+  var diag = {temClaude:false, resposta:"aguardando", ms:null, perm:"não lida"};
+  var avisoTravado = false;
+
+  function diagLinha(){
+    return 'window.claude: ' + (diag.temClaude ? 'presente' : 'ausente')
+         + ' · use("mcp"): ' + diag.resposta
+         + (diag.ms !== null ? ' em ' + diag.ms + 'ms' : '')
+         + ' · permissão: ' + diag.perm;
+  }
+
+  function noMcp(reason){
+    offline(reason, "down");
+    var copy = '<div class="state warnbox"><strong>Sem acesso aos conectores</strong>'
+      + '<p>Abra esta página pelo claude.ai, na sua conta, com Agenda, Todoist, Gmail, Drive e AccuWeather ligados. '
+      + 'Fora dali o painel não consegue buscar nada.</p></div>';
+    ["agenda-body","prox-body","tarefas-body","email-body","drive-body"].forEach(function(id){ el(id).innerHTML = copy; });
+    el("pills").innerHTML = "";
+    el("refresh-btn").disabled = true;
+    el("track").innerHTML = '<div class="track-base"></div>';
+    el("axis").innerHTML = "";
+    el("rail-next").innerHTML = '<p class="rail-eyebrow">agenda</p>'
+      + '<h2 class="rail-what">indisponível sem os conectores</h2>';
+    el("weather-host").innerHTML = '<p class="wx-inline">clima indisponível sem os conectores</p>';
+
+    avisoTravado = true;
+    var pa = el("pagealert");
+    pa.hidden = false;
+    pa.innerHTML = '<div class="pagealert">'
+      + '<div class="pa-txt"><strong>O painel não conseguiu falar com os conectores</strong>'
+      +   '<p>Se você abriu pelo claude.ai na sua conta, o problema é da página, não seu. '
+      +   'Recarregue uma vez; se continuar, me mande a linha cinza abaixo.</p>'
+      +   '<span class="pa-code">' + esc(diagLinha()) + '</span></div>'
+      + '<button class="btn" type="button" id="pa-reload">Recarregar</button>'
+      + '</div>';
+  }
+
+  // O contrário de noMcp(): tira a tarja, devolve os cartões ao estado de carregando
+  // e deixa o painel desenhar de novo. Só faz sentido quando os conectores chegaram.
+  function destravarAviso(){
+    if(!avisoTravado) return;
+    avisoTravado = false;
+    var pa = el("pagealert");
+    pa.hidden = true; pa.innerHTML = "";
+    logEv("arranque", "conectores-chegaram-tarde", "");
+    renderAll();
+  }
+
+  function applyEvent(key, ev, sub){
+    var target = sub ? S[key].tabs[sub] : S[key];
+    logEv((sub ? key + "." + sub : key), ev.type, ev.type === "error" ? (ev.error && ev.error.code) : "");
+
+    if(ev.type === "data"){
+      var r = ev.result || {};
+      target.data   = (r.payload && typeof r.payload === "object") ? r.payload : null;
+      target.status = "ok";
+      target.err    = null;
+      target.at     = (r.cache && r.cache.storedAt) ? r.cache.storedAt : Date.now();
+    } else {
+      var e = ev.error || {code:"upstream_error", message:""};
+      target.err = e;
+      if(RETRACT[e.code] || !target.data){
+        target.data   = null;
+        target.status = "error";
+      } else {
+        target.status = "stale";   // erro passageiro: mantém o último bom
+      }
+    }
+    renderAll();
+  }
+
+  var mcpRef = null;
+
+  var host = (typeof window !== "undefined" && window.claude && typeof window.claude.use === "function") ? window.claude : null;
+  diag.temClaude = !!host;
+  if(!host){
+    diag.resposta = "window.claude ausente";
+    noMcp("abra pelo claude.ai para ligar os conectores");
+    return;
+  }
+
+  var t0 = Date.now(), respondeu = false;
+
+  // Leitura de permissão: só informativa. Nunca decide o que a página desenha.
+  try{
+    Promise.resolve(host.use("permissions")).then(function(pm){
+      return (pm && typeof pm.state === "function") ? pm.state("mcp") : null;
+    }).then(function(v){
+      if(v) diag.perm = String(v);
+    }).catch(function(){ diag.perm = "indisponível"; });
+  }catch(e){ diag.perm = "indisponível"; }
+
+  // O contrato promete null em ~10s quando ninguém responde. Se nem isso vier, avisa.
+  setTimeout(function(){
+    if(respondeu) return;
+    diag.resposta = "sem resposta";
+    diag.ms = Date.now() - t0;
+    noMcp("os conectores não responderam");
+  }, 13000);
+
+  var unsubs = [];
+
+  function W(server, tool, input, key, altKey, everyMs){
+    // O slot guarda o próprio ritmo: é ele que define quando o dado ficou velho.
+    var alvo = altKey ? S[key].tabs[altKey] : S[key];
+    alvo.every = everyMs;
+    try{
+      var u = mcpRef.watchTool(server, tool, input, function(ev){ applyEvent(key, ev, altKey); },
+                    {cache:{staleTime: Math.max(30000, everyMs - 15000)}, refetchInterval: everyMs});
+      if(typeof u === "function") unsubs.push(u);
+    }catch(err){
+      applyEvent(key, {type:"error", error:{code:"bad_request", message:String(err && err.message || err)}}, altKey);
+    }
+  }
+
+  // As datas entram nas consultas, então registrar é algo que se refaz quando o dia vira.
+  function registerWatches(){
+    // Agenda: de hoje até 7 dias à frente
+    W("Google Calendar", "list_events", {
+      startTime: TODAY + "T00:00:00" + OFF,
+      endTime:   WEEK_END + "T23:59:59" + OFF,
+      orderBy:   "startTime",
+      pageSize:  250,
+      timeZone:  TZ
+    }, "agenda", null, 180000);
+
+    // Tarefas: hoje + 7 dias, já inclui as atrasadas
+    W("Todoist", "find-tasks-by-date", {
+      startDate: TODAY,
+      daysCount: 8,
+      limit: 60,
+      overdueOption: "include-overdue",
+      responsibleUserFiltering: "unassignedOrMe"
+    }, "tarefas", null, 180000);
+
+    // E-mail, três recortes: o que pede resposta, os alunos, e tudo.
+    // A conta é Workspace: as categorias do Gmail (primary/promotions) não existem aqui.
+    // O que separa sinal de ruído nesta caixa é o domínio da rede e a estrela.
+    // "Esperando você" = não lido da rede (sem os alunos, que têm aba própria)
+    // OU qualquer coisa que você marcou com estrela — inclusive já lida, que é
+    // justamente o caso de "li e preciso responder".
+    // O corte de 60 dias vale para o não lido da rede; a estrela NÃO expira —
+    // antes, algo marcado para responder sumia do painel ao completar 60 dias.
+    W("Gmail", "search_threads", {
+      query: "in:inbox -from:no-reply -from:noreply "
+           + "((from:educacao.sp.gov.br -from:al.educacao.sp.gov.br is:unread newer_than:60d) OR is:starred)",
+      pageSize: 25,
+      view: "THREAD_VIEW_MINIMAL"
+    }, "email", "pri", 120000);
+
+    // Os alunos quase não escrevem do endereço @al: eles falam pelo Classroom, e a
+    // notificação chega como no-reply@classroom.google.com. Sem o Classroom aqui,
+    // esta aba vivia vazia e os comentários dos alunos não apareciam em lugar nenhum.
+    W("Gmail", "search_threads", {
+      query: "in:inbox (from:al.educacao.sp.gov.br OR from:classroom.google.com)",
+      pageSize: 12,
+      view: "THREAD_VIEW_MINIMAL"
+    }, "email", "alunos", 300000);
+
+    W("Gmail", "search_threads", {
+      query: "in:inbox is:unread",
+      pageSize: 12,
+      view: "THREAD_VIEW_MINIMAL"
+    }, "email", "tudo", 600000);
+
+    // Drive: arquivos recentes. Pede 30 para mostrar 12 — as pastas são descartadas
+    // na hora de desenhar e são quase metade do que o conector devolve; pedindo 12
+    // o cartão mostraria só uns quatro arquivos.
+    W("Google Drive", "list_recent_files", {
+      pageSize: 30,
+      orderBy: "recency",
+      excludeContentSnippets: true
+    }, "drive", null, 600000);
+  }
+
+  function dropWatches(){
+    unsubs.forEach(function(u){ try{ u(); }catch(e){} });
+    unsubs = [];
+    if(wxUnsub){ try{ wxUnsub(); }catch(e){} wxUnsub = null; }
+  }
+
+  function resetSlots(){
+    [S.agenda, S.tarefas, S.drive, S.wx,
+     S.email.tabs.pri, S.email.tabs.alunos, S.email.tabs.tudo].forEach(function(st){
+      st.status = "loading"; st.data = null; st.err = null; st.at = 0; st.velho = false;
+    });
+    S.tarefas.picked = false;
+    clearLastAction();
+    rowErrors = {};
+  }
+
+  // Virou o dia: as consultas carregam a data antiga e o painel mostraria ontem
+  // para sempre. Refaz tudo com a data nova, sem depender de o usuário recarregar.
+  function rollDay(){
+    TODAY = isoOf(new Date());
+    WEEK_END = addDays(TODAY, 7);
+    el("today-label").textContent = cap(fDay.format(new Date()));
+    if(!mcpRef) return;
+    dropWatches();
+    resetSlots();
+    renderAll();
+    registerWatches();
+    if(wxLoc) startWx();
+    setTimeout(checarParadas, ESPERA_MAX);
+    el("foot-boot").textContent = "recarregado às " + fTime.format(new Date());
+  }
+
+  host.use("mcp").then(function(mcp){
+    respondeu = true;
+    diag.ms = Date.now() - t0;
+    diag.resposta = mcp ? "ok" : "null";
+    if(!mcp){ noMcp("conectores indisponíveis nesta visualização"); return; }
+    mcpRef = mcp;
+    el("refresh-btn").disabled = false;
+
+    // A resposta pode chegar depois do prazo do vigia, que já terá pintado a tarja
+    // vermelha. Chegou: desfaz o alarme, limpa os cartões e segue normalmente.
+    destravarAviso();
+
+    el("live-dot").className = "dot";
+    el("live-label").textContent = "buscando…";
+    el("foot-boot").textContent = "aberto às " + fTime.format(new Date());
+
+    registerWatches();
+
+    // Clima: uma só chamada traz condição atual, chuva minuto a minuto e alertas do INMET.
+    loadWxLocation();
+
+    setTimeout(checarParadas, ESPERA_MAX);
+
+  }, function(e){
+    respondeu = true;
+    diag.ms = Date.now() - t0;
+    diag.resposta = "rejeitou (" + ((e && e.code) || "sem código") + ")";
+    noMcp("não foi possível iniciar os conectores");
+  });
+
+  /* ---------------- interações ---------------- */
+  var busy = {};
+
+  var rowErrors = {};   // id -> mensagem, para a falha não sumir num redesenho
+
+  function paintErr(row, msg){
+    var nx = row.nextElementSibling;
+    if(nx && nx.className === "row-err") nx.parentNode.removeChild(nx);
+    var d = document.createElement("li");
+    d.className = "row-err";
+    d.setAttribute("role","status");
+    d.textContent = msg;
+    row.parentNode.insertBefore(d, row.nextSibling);
+  }
+
+  function rowErr(row, msg){
+    var id = row.getAttribute("data-tid");
+    if(id) rowErrors[id] = msg;
+    paintErr(row, msg);
+  }
+
+  function clearRowErr(id){
+    delete rowErrors[id];
+    var row = document.querySelector('#tarefas-body .row[data-tid="'+id+'"]');
+    var nx = row && row.nextElementSibling;
+    if(nx && nx.className === "row-err") nx.parentNode.removeChild(nx);
+  }
+
+  // Repinta as falhas guardadas depois que renderTarefas reconstrói a lista.
+  function restoreErrs(){
+    Object.keys(rowErrors).forEach(function(id){
+      var row = document.querySelector('#tarefas-body .row[data-tid="'+id+'"]');
+      if(row) paintErr(row, rowErrors[id]);
+      else delete rowErrors[id];   // saiu do filtro: a mensagem perdeu o contexto
+    });
+  }
+
+  function revert(row, btn, msg){
+    row.classList.remove("done");
+    btn.disabled = false;
+    rowErr(row, msg);
+  }
+
+  function dropTask(id){
+    var d = S.tarefas.data;
+    if(!d || !d.tasks) return;
+    d.tasks = d.tasks.filter(function(t){ return t.id !== id; });
+    renderTarefas();
+  }
+
+  function completeTask(btn){
+    var id = btn.getAttribute("data-tid");
+    var row = btn.closest(".row");
+    if(!id || !row) return;
+    if(!mcpRef){ rowErr(row, "Sem conexão com o Todoist nesta visualização."); return; }
+    if(busy[id]) return;
+    busy[id] = true;
+
+    var alvo = findTask(id);
+    clearRowErr(id);
+    btn.disabled = true;
+    row.classList.add("done");
+
+    // Escrita: sem AbortSignal e sem repetição automática — uma rejeição não prova que não executou.
+    mcpRef.callTool("Todoist", "complete-tasks", {ids:[id]}).then(function(r){
+      var pl = r && r.payload;
+      var ok = pl && ((pl.completed && pl.completed.indexOf(id) !== -1) || pl.successCount >= 1);
+      if(!ok){
+        revert(row, btn, "O Todoist recebeu o pedido mas não concluiu esta tarefa. Abra-a no Todoist para ver o motivo.");
+        return;
+      }
+      clearRowErr(id);
+      setTimeout(function(){
+        setLastAction({kind:"done", id:id, task:alvo,
+                       content:(alvo && alvo.content) || "tarefa",
+                       prevDue:(alvo && alvo.dueDate) || null,
+                       recurring:!!(alvo && alvo.recurring)});
+        dropTask(id);
+      }, 420);
+      return mcpRef.invalidate("Todoist", "find-tasks-by-date").catch(function(){});
+    }).catch(function(e){
+      var code = e && e.code;
+      if(code === "server_unavailable" || code === "upstream_error" || code === "cancelled" || code === "rate_limited"){
+        // Resultado ambíguo: pode ter concluído mesmo assim. Não repetir sozinho — reler.
+        revert(row, btn, "Não deu para confirmar se concluiu. Confira no Todoist; a lista recarrega em instantes.");
+        mcpRef.invalidate("Todoist", "find-tasks-by-date").catch(function(){});
+      } else {
+        var c = errCopy(e, "Todoist");
+        revert(row, btn, c.t + " — " + c.p);
+      }
+    }).then(function(){ delete busy[id]; }, function(){ delete busy[id]; });
+  }
+
+  function postponeTask(btn){
+    var id = btn.getAttribute("data-snooze");
+    var row = btn.closest(".row");
+    if(!id || !row) return;
+    if(!mcpRef){ rowErr(row, "Sem conexão com o Todoist nesta visualização."); return; }
+    if(busy[id]) return;
+    busy[id] = true;
+
+    var alvo = findTask(id);
+    var antes = alvo && alvo.dueDate;
+    clearRowErr(id);
+    btn.disabled = true;
+    row.classList.add("moved");
+
+    var amanha = addDays(TODAY, 1);
+
+    // Escrita: sem AbortSignal e sem repetição automática.
+    // reschedule-tasks preserva a recorrência; update-tasks apagaria.
+    mcpRef.callTool("Todoist", "reschedule-tasks", {tasks:[{id:id, date:amanha}]}).then(function(r){
+      var pl = r && r.payload;
+      var ok = pl && ((pl.rescheduledTaskIds && pl.rescheduledTaskIds.indexOf(id) !== -1)
+                   || (pl.tasks && pl.tasks.length));
+      if(!ok){
+        revertMove(row, btn, "O Todoist recebeu o pedido mas não adiou esta tarefa. Abra-a no Todoist para ver o motivo.");
+        return;
+      }
+      clearRowErr(id);
+      setTimeout(function(){
+        setLastAction({kind:"moved", id:id, task:alvo,
+                       content:(alvo && alvo.content) || "tarefa",
+                       prevDue:antes || null,
+                       recurring:!!(alvo && alvo.recurring)});
+        moveTask(id, amanha);
+      }, 380);
+      return mcpRef.invalidate("Todoist", "find-tasks-by-date").catch(function(){});
+    }).catch(function(e){
+      var code = e && e.code;
+      if(code === "server_unavailable" || code === "upstream_error" || code === "cancelled" || code === "rate_limited"){
+        revertMove(row, btn, "Não deu para confirmar se adiou. Confira no Todoist; a lista recarrega em instantes.");
+        mcpRef.invalidate("Todoist", "find-tasks-by-date").catch(function(){});
+      } else {
+        var c = errCopy(e, "Todoist");
+        revertMove(row, btn, c.t + " — " + c.p);
+      }
+    }).then(function(){ delete busy[id]; }, function(){ delete busy[id]; });
+  }
+
+  function revertMove(row, btn, msg){
+    row.classList.remove("moved");
+    btn.disabled = false;
+    rowErr(row, msg);
+  }
+
+  // Mantém a hora quando a tarefa tinha uma; só troca o dia.
+  function moveTask(id, novaData){
+    var d = S.tarefas.data;
+    if(!d || !d.tasks) return;
+    d.tasks.forEach(function(t){
+      if(t.id !== id) return;
+      var due = t.dueDate || "";
+      t.dueDate = (due.indexOf("T") !== -1) ? novaData + due.slice(due.indexOf("T")) : novaData;
+    });
+    renderTarefas();
+  }
+
+  el("tarefas-body").addEventListener("click", function(e){
+    var ub = e.target.closest("[data-undo]");
+    if(ub){ if(!ub.disabled) undoLast(); return; }
+    var b = e.target.closest(".check");
+    if(b && !b.disabled){ completeTask(b); return; }
+    var sn = e.target.closest(".snooze");
+    if(sn && !sn.disabled) postponeTask(sn);
+  });
+
+  el("tarefas-chips").addEventListener("click", function(e){
+    var c = e.target.closest(".chip"); if(!c) return;
+    taskFilter = c.dataset.filter; renderTarefas();
+  });
+  el("email-chips").addEventListener("click", function(e){
+    var c = e.target.closest(".chip"); if(!c) return;
+    mailTab = c.dataset.mail; renderEmail();
+  });
+
+  var SERVER_OF = {agenda:"Google Calendar", tarefas:"Todoist", email:"Gmail", drive:"Google Drive"};
+
+  function doRefresh(btn, server){
+    if(!mcpRef) return;
+    var icon = btn.querySelector("svg");
+    if(icon) icon.classList.add("spin");
+    btn.disabled = true;
+    var p = server ? mcpRef.invalidate(server) : mcpRef.invalidate();
+    Promise.resolve(p).catch(function(){ /* nada em cache: os watches seguem no ritmo deles */ })
+      .then(function(){
+        setTimeout(function(){ if(icon) icon.classList.remove("spin"); btn.disabled=false; }, 900);
+      });
+  }
+
+  el("refresh-btn").addEventListener("click", function(){ doRefresh(el("refresh-btn"), null); });
+
+  // As pílulas do topo não são enfeite: cada uma leva a lista ao recorte que ela conta.
+  el("pills").addEventListener("click", function(e){
+    var b = e.target.closest("[data-goto]");
+    if(!b) return;
+    var alvo = b.getAttribute("data-goto");
+    if(alvo === "email"){ mailTab = "pri"; safe("email", renderEmail, "email-body"); }
+    else { taskFilter = alvo; safe("tarefas", renderTarefas, "tarefas-body"); }
+    // No celular o cartão fica lá embaixo: leva até ele se estiver fora da tela.
+    var card = el(alvo === "email" ? "email" : "tarefas");
+    var r = card.getBoundingClientRect();
+    if(r.top < 0 || r.top > window.innerHeight - 120){
+      var suave = !(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+      window.scrollTo({top: r.top + window.scrollY - 16, behavior: suave ? "smooth" : "auto"});
+    }
+    var chip = card.querySelector('.chip[aria-pressed="true"]');
+    if(chip) try{ chip.focus({preventScroll:true}); }catch(err){}
+  });
+
+  // Tema: o sistema decide no primeiro acesso; a escolha manual fica guardada.
+  var raiz = document.documentElement;
+  var temaSalvo = lsGet("painel.tema");
+  if(temaSalvo === "dark" || temaSalvo === "light") raiz.setAttribute("data-theme", temaSalvo);
+  el("theme-btn").addEventListener("click", function(){
+    var escuroSistema = !!(window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    var atual = raiz.getAttribute("data-theme") || (escuroSistema ? "dark" : "light");
+    var novo = atual === "dark" ? "light" : "dark";
+    raiz.setAttribute("data-theme", novo);
+    lsSet("painel.tema", novo);
+  });
+
+})();
+</script>
+</html>
+
+</body></html>
